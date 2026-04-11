@@ -32,7 +32,7 @@ The Arcade64 "GUI" EKMAME source code has been implemented (By KAZE).
 
 It is already pre-configured, enforce aspect ratio is disabled, full screen mode and tricks are already enabled by default.
 
-The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM. (By KAZE).
+The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM (By KAZE).
 
 Supports UI DPI (The resolution 1920 x 1080 / 2560 x 1600) (By 缘来是你).
 
