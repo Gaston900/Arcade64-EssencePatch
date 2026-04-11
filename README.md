@@ -34,7 +34,7 @@ It is already pre-configured, enforce aspect ratio is disabled, full screen mode
 
 The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM. (By KAZE).
 
-Supports UI DPI (1920*1080 / 2560*1600) (By 缘来是你).
+Supports UI DPI (The resolution 1920 x 1080 / 2560 x 1600) (By 缘来是你).
 
 Supports optimized search function (By 缘来是你).
 
