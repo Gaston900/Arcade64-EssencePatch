@@ -30,13 +30,17 @@ Added movement optimization V.4 for all fighting games (By GSC2007).
 
 The Arcade64 "GUI" EKMAME source code has been implemented (By KAZE).
 
-It is already pre-configured, video mode OpenGl, enforce aspect ratio is disabled, full screen mode and tricks are already enabled by default.
+It is already pre-configured, enforce aspect ratio is disabled, full screen mode and tricks are already enabled by default.
 
-The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM.
+The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM. (By KAZE).
 
-Supports enabling multiple IPS patches simultaneously (By 缘来是你).
+Supports UI DPI (1920*1080 / 2560*1600) (By 缘来是你).
 
-Supports reading IPS subdirectories (By 缘来是你).
+Supports optimized search function (By 缘来是你).
+
+Supports XML export (By 缘来是你).
+
+Supports IPS optimization (By 缘来是你).
 
 Supports game list language files and multilingual title display (By 缘来是你).
 
