@@ -9,7 +9,7 @@
 #include <shellapi.h>
 #include <vector>	//导出XML
 
-#define USE_SPLASH_SCREEN 0  // 关闭启动画面
+#define USE_SPLASH_SCREEN 1  // 关闭启动画面
 
 static WNDPROC g_originalListViewProc = NULL;
 static bool g_bBatchDeleteMode = false;
@@ -4463,16 +4463,6 @@ const wchar_t *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn,
 	char playtime_buf[256];
 	char playcount_buf[256];
 
-// 修改的 代码来源 (缘来是你)
-//============== 修复中文列表 =============>>>
-	LVITEM lvi;
-	lvi.iItem = nItem;
-	lvi.mask = LVIF_PARAM;
-	int nRealGameIndex = nItem;
-	if (ListView_GetItem(hWndList, &lvi))
-		nRealGameIndex = lvi.lParam;
-//==========================================>>>
-
 	switch(nColumn)
 	{
 		case COLUMN_GAMES:
@@ -4480,49 +4470,46 @@ const wchar_t *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn,
 
 // 修改的 代码来源 (EKMAME)
 /*************************************************************************/
-			utf8_s = GetDescriptionByIndex(nRealGameIndex, GetUsekoreanList());
-			break;
+			utf8_s = GetDescriptionByIndex(nItem, GetUsekoreanList());
 /*************************************************************************/
+			break;
 
-// 修改的 代码来源 (缘来是你)
-//===================================================================================================>>>
 		case COLUMN_ROMNAME:
 			/* Driver name (directory) */
-			utf8_s = GetDriverGameName(nRealGameIndex);
+			utf8_s = GetDriverGameName(nItem);
 			break;
 
 		case COLUMN_MANUFACTURER:
 			/* Manufacturer */
-			utf8_s = GetDriverGameManufacturer(nRealGameIndex);
+			utf8_s = GetDriverGameManufacturer(nItem);
 			break;
 
 		case COLUMN_PLAYED:
 			/* played count */
-			snprintf(playcount_buf, std::size(playcount_buf), "%d",  GetPlayCount(nRealGameIndex));
+			snprintf(playcount_buf, std::size(playcount_buf), "%d",  GetPlayCount(nItem));
 			utf8_s = playcount_buf;
 			break;
 
 		case COLUMN_PLAYTIME:
 			/* played time */
-			GetTextPlayTime(nRealGameIndex, playtime_buf);
+			GetTextPlayTime(nItem, playtime_buf);
 			utf8_s = playtime_buf;
 			break;
 
 		case COLUMN_YEAR:
 			/* Year */
-			utf8_s = GetDriverGameYear(nRealGameIndex);
+			utf8_s = GetDriverGameYear(nItem);
 			break;
 
 		case COLUMN_SOURCEFILE:
 			/* Source drivers */
-			utf8_s = GetDriverFileName(nRealGameIndex);
+			utf8_s = GetDriverFileName(nItem);
 			break;
 
 		case COLUMN_CLONE:
-			utf8_s = GetCloneParentName(nRealGameIndex);
+			utf8_s = GetCloneParentName(nItem);
 			break;
 	}
-//===================================================================================================>>>
 
 	if(utf8_s)
 	{
