@@ -6425,7 +6425,7 @@ static intptr_t CALLBACK StartupProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 	{
 		case WM_INITDIALOG:
 		{
-			int imgWidth = (int)(526 * g_fDpiScale);
+			int imgWidth = (int)(461 * g_fDpiScale);
 			int imgHeight = (int)(136 * g_fDpiScale);
 			
 			HBITMAP hBmp = (HBITMAP)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_SPLASH), IMAGE_BITMAP, imgWidth, imgHeight, LR_CREATEDIBSECTION);
