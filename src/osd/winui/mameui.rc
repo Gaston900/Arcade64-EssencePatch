@@ -843,8 +843,8 @@ BEGIN
     CONTROL         "Exit from MAME when INP playback is finished",IDC_EXIT_PLAYBACK,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,200,269,164,10,0
 
 //==================== 缘来是你 ========================>>>
-	CONTROL         "Skip CRC/HASH check",IDC_SKIP_CRC_CHECK,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,200,281,200,10,0   // 缘来是你
-//	CONTROL 		"Enable PGM2 without inserting a card",IDC_PGM2_MEMCARD_HACK, WC_BUTTON, BS_AUTOCHECKBOX | WS_TABSTOP, 10, 214, 200, 10
+	CONTROL         "Skip CRC/HASH check",IDC_SKIP_CRC_CHECK,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,200,281,164,10,0
+//	CONTROL 		"Enable PGM2 without inserting a card",IDC_PGM2_MEMCARD_HACK, WC_BUTTON, BS_AUTOCHECKBOX | WS_TABSTOP, 10,214,164,10,0
 //======================================================>>>
 
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,294,98,14,0,0
