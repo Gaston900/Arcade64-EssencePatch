@@ -4852,6 +4852,7 @@ static void DisableVisualStyles(HWND hDlg)
 //	SetWindowTheme(GetDlgItem(hDlg, IDC_PGM2_MEMCARD_HACK), L" ", L" ");
 //	SetWindowTheme(GetDlgItem(hDlg, IDC_60FPS), L" ", L" ");
 //======================================================>>>
+
 	/* Snap/Movie/Playback */
 	SetWindowTheme(GetDlgItem(hDlg, IDC_SNAPVIEW), L" ", L" ");
 	SetWindowTheme(GetDlgItem(hDlg, IDC_SNAPNAME), L" ", L" ");
