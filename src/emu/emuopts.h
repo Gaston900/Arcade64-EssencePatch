@@ -41,16 +41,12 @@
 #define OPTION_LANGUAGEPATH         "languagepath"
 #define OPTION_SWPATH               "swpath"
 
-// 修改的 (Eziochiu) 
-/***********************************************/
+//================= 缘来是你 ===================>>>
 #define OPTION_IPSPATH              "ipspath"
 #define OPTION_IPS                  "ips"
-/***********************************************/
-
-// 修改的 (缘来是你) 
-/***********************************************/
 #define OPTION_SKIP_CRC_CHECK       "skipcrc"
-/***********************************************/
+#define OPTION_PGM2_MEMCARD_HACK    "pgm2_memcard_hack"
+//===============================================>>>
 
 // core directory options
 #define OPTION_CFG_DIRECTORY        "cfg_directory"
@@ -213,6 +209,10 @@
 #define OPTION_HTTP_PORT            "http_port"
 #define OPTION_HTTP_ROOT            "http_root"
 
+
+//=============================== 缘来是你 ====================>>>
+#define OPTION_60FPS        		"Frame_60fps"
+//============================================================>>>
 //**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
@@ -517,6 +517,10 @@ public:
 	const ::image_option &image_option(std::string_view device_name) const;
 	::image_option &image_option(std::string_view device_name);
 	bool has_image_option(std::string_view device_name) const { return m_image_options.find(device_name) != m_image_options.end(); }
+
+//=============================== 缘来是你 ==================================>>>
+	bool Frame_60fps() const { return bool_value(OPTION_60FPS); }
+//==========================================================================>>>
 
 protected:
 	virtual void command_argument_processed() override;

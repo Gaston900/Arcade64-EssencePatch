@@ -670,10 +670,6 @@ BEGIN
     PUSHBUTTON      "Select",IDC_SELECT_EFFECT,180,281,40,14,0,0
     PUSHBUTTON      "Reset",IDC_RESET_EFFECT,220,281,40,14,0,0
 
-//==================== 缘来是你 ========================>>>
-//    CONTROL         "The game is set to a fixed frame rate of 60 frames per second.", IDC_60FPS, WC_BUTTON, BS_AUTOCHECKBOX | WS_TABSTOP, 10, 254, 100, 10
-//======================================================>>>
-
     GROUPBOX        "BGFX screen chains",IDC_STATIC,280,253,102,48
     EDITTEXT         IDC_BGFX_CHAINS,290,265,90,14,ES_LEFT | WS_BORDER
     PUSHBUTTON      "Select",IDC_SELECT_BGFX,290,279,40,14,0,0
@@ -847,7 +843,7 @@ BEGIN
     COMBOBOX        IDC_SELECT_PLUGIN,195,116,70,62,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0
     PUSHBUTTON      "Reset plugins",IDC_RESET_PLUGIN,300,116,70,14,0,0
 
-    GROUPBOX        "Snap/Movie/Playback",IDC_STATIC,190,140,200,155
+    GROUPBOX        "Snap/Movie/Playback",IDC_STATIC,190,140,200,165
     GROUPBOX        "View mode",IDC_STATIC,195,154,102,28
     COMBOBOX        IDC_SNAPVIEW,200,164,90,62,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0
     GROUPBOX        "",IDC_STATIC,195,176,102,28
@@ -865,6 +861,7 @@ BEGIN
 //==================== 缘来是你 ========================>>>
 	CONTROL         "Skip CRC/HASH check",IDC_SKIP_CRC_CHECK,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,200,281,164,10,0
 //	CONTROL 		"Enable PGM2 without inserting a card",IDC_PGM2_MEMCARD_HACK, WC_BUTTON, BS_AUTOCHECKBOX | WS_TABSTOP, 10,214,164,10,0
+    CONTROL         "Fixed frame rate of 60 frames per second", IDC_60FPS, WC_BUTTON, BS_AUTOCHECKBOX | WS_TABSTOP, 200,293,164,10,0
 //======================================================>>>
 
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,294,98,14,0,0
