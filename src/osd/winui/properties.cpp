@@ -265,12 +265,12 @@ const DUALCOMBOSTR g_ComboBoxVideo[] =
 
 const DUALCOMBOSTR g_ComboBoxSound[] =
 {
-	{ TEXT("None"),                  "none"    },
-	{ TEXT("Auto"),                  "auto"    },
-	{ TEXT("DirectSound"),           "dsound"  },
-	{ TEXT("PortAudio"),             "portaudio" },
-	{ TEXT("Wasapi"),                "wasapi" },
-	{ TEXT("XAudio2 (Win10+ only)"), "xaudio2" },
+	{ TEXT("None"),         "none"    },
+	{ TEXT("Auto"),         "auto"    },
+	{ TEXT("DirectSound"),  "dsound"  },
+	{ TEXT("PortAudio"),    "portaudio" },
+	{ TEXT("Wasapi"),       "wasapi" },
+	{ TEXT("XAudio2"),      "xaudio2" },
 };
 
 const DUALCOMBOINT g_ComboBoxSampleRate[] =
@@ -1589,7 +1589,7 @@ static char *GameInfoTitle(OPTIONS_TYPE opt_type, int nIndex)
 	return buffer;
 }
 
-/* Build game clone infromation string */
+// Build game clone information string
 static char *GameInfoCloneOf(int nIndex)
 {
 	static char buffer[1024];
@@ -2476,6 +2476,7 @@ static intptr_t CALLBACK GameOptionsDialogProc(HWND hDlg, UINT uMsg, WPARAM wPar
 				}
 //===========================================================>>>
 			}
+
 			break;
 		}
 
