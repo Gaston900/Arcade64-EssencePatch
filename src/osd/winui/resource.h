@@ -181,8 +181,6 @@
 #define IDI_HEADER_UP                   287
 #define IDI_HEADER_DOWN                 288
 
-#define IDB_SNAPSHOT2                   289
-
 // 修改的 (Eziochiu)
 /*******************************************/
 #define IDB_MAME_IPS                    302
