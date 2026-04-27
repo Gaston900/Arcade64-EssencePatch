@@ -1013,11 +1013,22 @@ int win_window_info::complete_create()
 	if (!attached_mode())
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 
-// 修改的 代码来源 (缘来是你)
-//================= 如果提供中文名称，则将窗口标题为中文名称 =============>>>
+//================= 缘来是你：窗口标题中文化 =======================>>>
 	std::string ch_name = machine().chinese_name();
+	std::string short_name = machine().system().name;
+	std::string window_title;
+	
 	if (!ch_name.empty())
-		SetWindowText(hwnd, osd::text::to_tstring(ch_name).c_str());
+	{
+		window_title = ch_name + " [" + short_name + "]";
+	}
+	else
+	{
+		const char* driver_desc = machine().system().type.fullname();
+		window_title = std::string(driver_desc) + " [" + short_name + "]";
+	}
+	
+	SetWindowText(hwnd, osd::text::to_tstring(window_title).c_str());
 //=================================================================>>>
 
 	// skip the positioning stuff for '-video none' or '-attach_window'
@@ -2170,63 +2181,12 @@ void win_window_info::update_pointer(win_pointer_info &info, POINT const &where,
 	}
 }
 
+//======================= 缘来是你：支持 Win7 =========================>>>
 std::vector<win_window_info::win_pointer_info>::iterator win_window_info::map_pointer(WPARAM wparam)
 {
-	WORD const ptrid(GET_POINTERID_WPARAM(wparam));
-	auto found(std::lower_bound(m_active_pointers.begin(), m_active_pointers.end(), ptrid, &win_pointer_info::compare));
-	if ((m_active_pointers.end() != found) && (found->ptrid == ptrid))
-		return found;
-
-	if ((sizeof(m_next_pointer) * 8) <= m_next_pointer)
-	{
-		assert(~decltype(m_pointer_mask)(0) == m_pointer_mask);
-		osd_printf_warning("win_window_info: exceeded maximum number of active pointers\n");
-		return m_active_pointers.end();
-	}
-	assert(!BIT(m_pointer_mask, m_next_pointer));
-
-	POINTER_INFO info = { 0 };
-	if (!GetPointerInfo(ptrid, &info))
-	{
-		osd_printf_error("win_window_info: failed to get info for pointer ID %u\n", ptrid);
-		return m_active_pointers.end();
-	}
-
-	auto devpos(std::lower_bound(
-			m_ptrdev_map.begin(),
-			m_ptrdev_map.end(),
-			info.sourceDevice,
-			[] (std::pair<HANDLE, unsigned> const &mapping, HANDLE device)
-			{
-				return mapping.first < device;
-			}));
-
-	try
-	{
-		if ((m_ptrdev_map.end() == devpos) || (devpos->first != info.sourceDevice))
-		{
-			devpos = m_ptrdev_map.emplace(devpos, info.sourceDevice, m_next_ptrdev);
-			++m_next_ptrdev;
-		}
-
-		found = m_active_pointers.emplace(
-				found,
-				win_pointer_info(ptrid, info.pointerType, m_next_pointer, devpos->second));
-		m_pointer_mask |= decltype(m_pointer_mask)(1) << m_next_pointer;
-		do
-		{
-			++m_next_pointer;
-		}
-		while (((sizeof(m_next_pointer) * 8) > m_next_pointer) && BIT(m_pointer_mask, m_next_pointer));
-
-		return found;
-	}
-	catch (std::bad_alloc const &)
-	{
-		osd_printf_error("win_window_info: error allocating pointer data\n");
-		return m_active_pointers.end();
-	}
+    return m_active_pointers.end();
 }
+//===================================================================>>>
 
 std::vector<win_window_info::win_pointer_info>::iterator win_window_info::find_pointer(WPARAM wparam)
 {
