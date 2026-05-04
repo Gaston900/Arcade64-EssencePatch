@@ -46,7 +46,9 @@ const options_entry ui_options::s_option_entries[] =
 	{ nullptr,                              nullptr,            option_type::HEADER,     "UI MISC OPTIONS" },
 	{ OPTION_SYSTEM_NAMES,                  "",                 option_type::MULTIPATH,  "translated system names file" },
 	{ OPTION_SKIP_WARNINGS,                 "0",                option_type::BOOLEAN,    "display fewer repeated warnings about imperfect emulation" },
-	{ OPTION_UNTHROTTLE_MUTE ";utm",        "0",                option_type::BOOLEAN,    "mute audio when running unthrottled or when fast-forwarding" },
+	{ OPTION_UNTHROTTLE_MUTE,               "0",                option_type::BOOLEAN,    "mute audio when running unthrottled or when fast-forwarding" },
+	{ OPTION_MENU_PAUSE,                    "0",                option_type::BOOLEAN,    "automatically pause when showing menus" },
+	{ OPTION_UI_FOLLOW_FOCUS,               "0",                option_type::BOOLEAN,    "open menus in active window" },
 
 	// UI options
 	{ nullptr,                              nullptr,            option_type::HEADER,      "UI OPTIONS" },
@@ -74,7 +76,7 @@ const options_entry ui_options::s_option_entries[] =
 	{ nullptr,                              nullptr,            option_type::HEADER,     "SYSTEM/SOFTWARE SELECTION MENU OPTIONS" },
 	{ OPTION_HIDE_PANELS "(0-3)",           "0",                option_type::INTEGER,    "UI hide left/right panel in main view (0 = Show all, 1 = hide left, 2 = hide right, 3 = hide both" },
 	{ OPTION_USE_BACKGROUND,                "1",                option_type::BOOLEAN,    "enable background image in main view" },
-	{ OPTION_SKIP_BIOS_MENU,                "1",                option_type::BOOLEAN,    "skip bios submenu, start with configured or default" },
+	{ OPTION_SKIP_BIOS_MENU,                "1",                option_type::BOOLEAN,    "skip bios submenu, start with configured or default" }, // 修改的 代码来源 (加斯顿90)
 	{ OPTION_SKIP_PARTS_MENU,               "0",                option_type::BOOLEAN,    "skip parts submenu, start with first part" },
 	{ OPTION_REMEMBER_LAST,                 "1",                option_type::BOOLEAN,    "initially select last used system in main menu" },
 	{ OPTION_LAST_USED_MACHINE,             "",                 option_type::STRING,     "last selected system" },
@@ -84,7 +86,7 @@ const options_entry ui_options::s_option_entries[] =
 	{ OPTION_SYSTEM_RIGHT_IMAGE,            "snap",             option_type::STRING,     "selected system right panel image" },
 	{ OPTION_SOFTWARE_RIGHT_IMAGE,          "snap",             option_type::STRING,     "selected software right panel image" },
 	{ OPTION_ENLARGE_SNAPS,                 "1",                option_type::BOOLEAN,    "enlarge images in right panel (keeping aspect ratio)" },
-	{ OPTION_FORCED4X3,                     "0",                option_type::BOOLEAN,    "force 4:3 aspect ratio for snapshots in the software menu" },
+	{ OPTION_FORCED4X3,                     "0",                option_type::BOOLEAN,    "force 4:3 aspect ratio for snapshots in the software menu" }, // 修改的 代码来源 (加斯顿90)
 	{ OPTION_INFO_AUTO_AUDIT,               "0",                option_type::BOOLEAN,    "automatically audit media for the general info panel" },
 	{ OPTION_HIDE_ROMLESS,                  "1",                option_type::BOOLEAN,    "hide systems that don't require ROMs in the available system filter" },
 

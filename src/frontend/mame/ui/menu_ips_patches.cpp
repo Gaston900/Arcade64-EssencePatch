@@ -18,8 +18,8 @@
 
 namespace ui {
 
-menu_ips_patches::menu_ips_patches(mame_ui_manager &mui, render_container &container)
-    : menu(mui, container)
+menu_ips_patches::menu_ips_patches(mame_ui_manager &mui, render_target &target)
+    : menu(mui, target)
     , m_need_reset(false)
 {
     set_process_flags(PROCESS_LR_REPEAT);

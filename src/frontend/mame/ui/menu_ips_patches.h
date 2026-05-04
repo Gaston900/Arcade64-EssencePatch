@@ -12,7 +12,7 @@ namespace ui {
 class menu_ips_patches : public menu
 {
 public:
-    menu_ips_patches(mame_ui_manager &mui, render_container &container);
+    menu_ips_patches(mame_ui_manager &mui, render_target &target);
     virtual ~menu_ips_patches() override;
 
     struct patch_info
