@@ -193,9 +193,21 @@ public:
 };
 
 //-------------------------------------------------
+//  Custom Button Setting menu
+//-------------------------------------------------
+
+class menu_custom_setting : public menu {
+public:
+	menu_custom_setting(mame_ui_manager &mui, render_target &target);
+	virtual ~menu_custom_setting();
+	virtual void populate() override;
+	virtual bool handle(event const *ev) override;
+};
+
+//-------------------------------------------------
 //  Custom Button menu
 //-------------------------------------------------
-#ifdef USE_CUSTOM_BUTTON
+
 class menu_custom_button : public menu {
 public:
 	menu_custom_button(mame_ui_manager &mui, render_target &target);
@@ -203,7 +215,6 @@ public:
 	virtual void populate() override;
 	virtual bool handle(event const *ev) override;
 };
-#endif /* USE_CUSTOM_BUTTON */
 /****************************************************************************/
 
 } // namespace ui

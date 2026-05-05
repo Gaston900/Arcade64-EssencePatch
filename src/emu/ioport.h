@@ -65,9 +65,7 @@ constexpr char32_t UCHAR_MAMEKEY_BEGIN = UCHAR_SHIFT_END + 1;
 /**************************************************************************/
 #define AUTOFIRE_ON			1	/* Autofire enable bit */
 #define AUTOFIRE_TOGGLE			2	/* Autofire toggle enable bit */
-#ifdef USE_CUSTOM_BUTTON
 #define MAX_CUSTOM_BUTTONS		4
-#endif /* USE_CUSTOM_BUTTON */
 #define MAX_NORMAL_BUTTONS		10
 /**************************************************************************/
 
@@ -893,9 +891,7 @@ public:
 
 // 修改的 代码来源 (EKMAME)
 /*******************************************************************/
-#ifdef USE_CUSTOM_BUTTON
  void append_custom(device_t &device, std::ostream &errorbuf);
-#endif /* USE_CUSTOM_BUTTON */
 /*******************************************************************/
 };
 
@@ -1116,9 +1112,7 @@ public:
 	bool auto_pressed(ioport_field *field);
 	int get_autofiredelay(int player) { return m_autofiredelay[player]; };
 	void set_autofiredelay(int player, int delay) { m_autofiredelay[player] = delay; };
-#ifdef USE_CUSTOM_BUTTON
 	u16 m_custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
-#endif /* USE_CUSTOM_BUTTON */
 /*******************************************************************************************/
 
 private:
@@ -1165,9 +1159,7 @@ private:
 
 // 修改的 代码来源 (EKMAME)
 /*******************************************************************************************/
-#ifdef USE_CUSTOM_BUTTON
 	ioport_field *          m_custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
-#endif /* USE_CUSTOM_BUTTON */
 	int                     m_autofiredelay[MAX_PLAYERS];
 	int                     m_autofiretoggle[MAX_PLAYERS];
 /*******************************************************************************************/
