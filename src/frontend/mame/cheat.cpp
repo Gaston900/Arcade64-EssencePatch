@@ -1226,7 +1226,7 @@ void cheat_manager::set_enable(bool enable, bool show)
 		m_disabled = true;
 
 //============ 缘来是你 =============>>>
-		save_to_json();
+		schedule_save();
 //==================================>>>
 	}
 	else if (m_disabled && enable)
@@ -1329,7 +1329,7 @@ void cheat_manager::reload()
 		save_all("output");
 	}
 
-	save_to_json();
+	schedule_save();
 //==================================>>>
 }
 
