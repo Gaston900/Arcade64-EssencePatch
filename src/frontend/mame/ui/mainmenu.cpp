@@ -152,7 +152,7 @@ void menu_main::populate()
 
 	item_append(_("menu-main", "Custom Buttons Setting"), 0, (void *)CUSTOM_BUTTON_SETTING);
 
-	item_append(_("menu-main", "Custom Buttons"), 0, (void *)CUSTOM_BUTTON);
+	item_append(_("menu-main", "Enable Custom Buttons"), 0, (void *)CUSTOM_BUTTON);
 /*******************************************************************************/
 
 	if (ui().machine_info().has_warnings())
