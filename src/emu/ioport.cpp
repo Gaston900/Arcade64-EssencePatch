@@ -1922,6 +1922,7 @@ ioport_manager::ioport_manager(running_machine &machine) :
 
 	memset(m_custom_button, 0, sizeof(m_custom_button));
 	memset(m_custom_button_info, 0, sizeof(m_custom_button_info));
+
 	for (int player = 0; player < MAX_PLAYERS; player++)
 	{
 		m_autofiredelay[player] = 3;	//mamep: 1 is too short for some games
