@@ -1919,6 +1919,7 @@ ioport_manager::ioport_manager(running_machine &machine) :
 	{
 		std::fill(std::begin(entries), std::end(entries), nullptr);
 	}
+
 	memset(m_custom_button, 0, sizeof(m_custom_button));
 	memset(m_custom_button_info, 0, sizeof(m_custom_button_info));
 	for (int player = 0; player < MAX_PLAYERS; player++)
@@ -3115,6 +3116,7 @@ void ioport_manager::save_game_inputs(util::xml::data_node &parentnode)
 						} else if (field.live().autofire & AUTOFIRE_TOGGLE) {
 							portnode->set_attribute("autofire", "toggle");
 						}
+
 						if (field.type() >= IPT_CUSTOM1 && field.type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS && m_custom_button[field.player()][field.type() - IPT_CUSTOM1]) {
 							portnode->set_attribute_int("custom", m_custom_button[field.player()][field.type() - IPT_CUSTOM1]);
 						}
@@ -4374,6 +4376,7 @@ bool ioport_manager::auto_pressed(ioport_field *field)
 
 	if (pressed && (field->toggle()))
 		m_autofiretoggle[field->player()] = field->live().autofire_toggle;
+
 	if (field->type() >= IPT_BUTTON1 && field->type() < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
 	{
 		uint16_t button_mask = 1 << (field->type() - IPT_BUTTON1);
@@ -4402,6 +4405,7 @@ bool ioport_manager::auto_pressed(ioport_field *field)
 				}
 			}
 	}
+
 	if (is_auto)
 	{
 		if (pressed)
