@@ -36,7 +36,15 @@ The cheat reference function, if the cloned game does not have a cheat file, it 
 
 Support was added to the "Drivers NeoGeo/CPS" [HBMAME](https://github.com/Robbbert/hbmame) (By Robert)
 
-Supports UI DPI (The resolution 1920 x 1080 / 2560 x 1600) (By 缘来是你).
+NEOGEO, PGM, driver supports key combination settings (By KAZE).
+
+Support for the option to lock the game's frame rate to 60 (By KAZE)
+
+Support automatic game icon adaptation (By KAZE)
+
+A bug that caused a crash due to an excessive number of entries in the multilingual games list has been fixed (By 缘来是你).
+
+Support for high-resolution screens 1920 x 1080 / 2560 x 1600 (By 缘来是你).
 
 Supports optimized search function (By 缘来是你).
 
@@ -48,7 +56,13 @@ Supports game list language files and multilingual title display (By 缘来是�
 
 Supports Skip CRC/IPS Check (By 缘来是你).
 
-NEOGEO, PGM, driver supports key combination settings (By KAZE).
+Support for a cheat code translation system has been added (By 缘来是你).
+
+Supports the quick ROM scan function (By 缘来是你).
+
+Supports searching for games by name, driver, and manufacturer (By 缘来是你).
+
+The IPS manager has been fixed (By Drunk Cat).
 
 How to compile
 ---------------------------------------
