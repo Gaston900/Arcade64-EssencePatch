@@ -18,7 +18,7 @@ Players 1 and 2 use this controller by default:
 * To move, use the arrow keys "Up, Down, Left, Right."
 * To perform actions, use the "A, S, D, Z, X, C, Q, W, E" keys.
 
-Added custom buttons and autofire (By MAMEPLUS).
+Added custom buttons and autofire (By MAMEPLUS)
 
 Removed warning screen, startups, Decryption screen texts.
 
@@ -26,9 +26,9 @@ Removed the following annoying messages: “WRONG LENGTH”, “NO_DUMP”, “W
 
 Support reading IPS (By Eziochiu)
 
-Added movement optimization V.4 for all fighting games (By GSC2007).
+Added movement optimization V.4 for all fighting games (By GSC2007)
 
-The Arcade64 "GUI" EKMAME source code has been implemented (By KAZE).
+The Arcade64 "GUI" EKMAME source code has been implemented (By KAZE)
 
 It is already pre-configured, enforce aspect ratio is disabled, full screen mode and tricks are already enabled by default.
 
@@ -36,7 +36,7 @@ The cheat reference function, if the cloned game does not have a cheat file, it 
 
 Support was added to the "Drivers NeoGeo/CPS" [HBMAME](https://github.com/Robbbert/hbmame) (By Robert)
 
-NEOGEO, PGM, driver supports key combination settings (By KAZE).
+NEOGEO, PGM, driver supports key combination settings (By KAZE)
 
 Support for the option to lock the game's frame rate to 60 (By KAZE)
 
@@ -44,25 +44,25 @@ Support automatic game icon adaptation (By KAZE)
 
 A bug that caused a crash due to an excessive number of entries in the multilingual games list has been fixed (By 缘来是你).
 
-Support for high-resolution screens 1920 x 1080 / 2560 x 1600 (By 缘来是你).
+Support for high-resolution screens 1920 x 1080 / 2560 x 1600 (By 缘来是你)
 
-Supports optimized search function (By 缘来是你).
+Supports optimized search function (By 缘来是你)
 
-Supports XML export (By 缘来是你).
+Supports XML export (By 缘来是你)
 
-Supports IPS optimization (By 缘来是你).
+Supports IPS optimization (By 缘来是你)
 
-Supports game list language files and multilingual title display (By 缘来是你).
+Supports game list language files and multilingual title display (By 缘来是你)
 
-Supports Skip CRC/IPS Check (By 缘来是你).
+Supports Skip CRC/IPS Check (By 缘来是你)
 
-Support for a cheat code translation system has been added (By 缘来是你).
+Support for a cheat code translation system has been added (By 缘来是你)
 
-Supports the quick ROM scan function (By 缘来是你).
+Supports the quick ROM scan function (By 缘来是你)
 
-Supports searching for games by name, driver, and manufacturer (By 缘来是你).
+Supports searching for games by name, driver, and manufacturer (By 缘来是你)
 
-The IPS manager has been fixed (By Drunk Cat).
+The IPS manager has been fixed (By Drunk Cat)
 
 How to compile
 ---------------------------------------
