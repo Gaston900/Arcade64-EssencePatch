@@ -114,12 +114,18 @@ typedef struct
 
 static const ICONDATA g_iconData[] =
 {
-	{ IDI_WIN_NOROMS,			"noroms" },
-	{ IDI_WIN_ROMS,				"roms" },
-	{ IDI_WIN_UNKNOWN,			"unknown" },
-	{ IDI_WIN_CLONE,			"clone" },
-	{ IDI_WIN_REDX,				"warning" },
-	{ IDI_WIN_IMPERFECT,		"imperfect" },
+	// These bad ones must be first; the order matters, don't change it.
+	{ IDI_LV_RN,             "rn" },   // roms missing
+	{ IDI_LV_RU,             "ru" },   // not audited
+	{ IDI_LV_BIOS,           "bios" },
+	{ IDI_LV_CX,             "cx" },   // red x instead of cn
+	{ IDI_LV_PX,             "px" },   // red x instead of pn
+	{ IDI_LV_CI,             "ci" },   // imperfect clone
+	{ IDI_LV_PI,             "pi" },   // imperfect parent
+	{ IDI_LV_CN,             "cn" },   // not working clone
+	{ IDI_LV_PN,             "pn" },   // not working parent
+	{ IDI_LV_CW,             "cw" },   // working clone
+	{ IDI_LV_PW,             "pw" },   // working parent
 	{ 0 }
 };
 
@@ -235,7 +241,6 @@ static void AdjustMetrics(void);
 /* Icon routines */
 static void CreateIcons(void);
 static int GetIconForDriver(int nItem);
-static void AddDriverIcon(int nItem, int default_icon_index);
 // Context Menu handlers
 static void UpdateMenu(HMENU hMenu);
 static void InitMainMenu(HMENU hMainMenu);
@@ -501,51 +506,51 @@ static int game_count=0;
 
 static const TBBUTTON tbb[] =
 {
-	{0, ID_VIEW_FOLDERS,    	TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 0},
-	{1, ID_VIEW_PICTURE_AREA,	TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 1},
-	{0, 0,                  	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
-	{2, ID_VIEW_ICONS_LARGE,  	TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 2},
-	{3, ID_VIEW_ICONS_SMALL, 	TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 3},
+	{0, ID_VIEW_FOLDERS,        TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 0},
+	{1, ID_VIEW_PICTURE_AREA,   TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 1},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{2, ID_VIEW_ICONS_LARGE,    TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 2},
+	{3, ID_VIEW_ICONS_SMALL,    TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 3},
 	{15, ID_VIEW_LIST_MENU,  	TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 15},
 	{5, ID_VIEW_DETAIL, 		TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 5},
 //	{6, ID_VIEW_GROUPED,  		TBSTATE_ENABLED, BTNS_CHECKGROUP, {0, 0}, 0, 6},
-	{0, 0,                  	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
-	{4, ID_ENABLE_INDENT,  		TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 12},
-	{0, 0,                  	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
-	{7, ID_UPDATE_GAMELIST,  	TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 4},
-	{0, 0,                    	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
-	{8, ID_OPTIONS_INTERFACE,	TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 5},
-	{9, ID_OPTIONS_DEFAULTS, 	TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 6},
-	{0, 0,                   	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
-	{10,ID_VIDEO_SNAP,			TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 7},
-	{11,ID_PLAY_M1,   			TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 8},
-	{0, 0,                    	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{4, ID_ENABLE_INDENT,       TBSTATE_ENABLED, BTNS_CHECK,      {0, 0}, 0, 12},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{7, ID_UPDATE_GAMELIST,     TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 4},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{8, ID_OPTIONS_INTERFACE,   TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 5},
+	{9, ID_OPTIONS_DEFAULTS,    TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 6},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{10,ID_VIDEO_SNAP,          TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 7},
+	{11,ID_PLAY_M1,             TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 8},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
 	{12,ID_HELP_ABOUT,          TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 9},
 	{13,ID_HELP_CONTENTS,       TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 10},
 	{14,ID_MAME_HOMEPAGE,       TBSTATE_ENABLED, BTNS_BUTTON,     {0, 0}, 0, 14},
-	{0, 0,                    	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0},
 	{6, ID_KOREAN_GAMELIST,     TBSTATE_ENABLED, BTNS_CHECK,	  {0, 0}, 0, 13}, // USE_KLIST
-	{0, 0,                    	TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0}
+	{0, 0,                      TBSTATE_ENABLED, BTNS_SEP,        {0, 0}, 0, 0}
 };
 
 static const wchar_t szTbStrings[NUM_TOOLTIPS][30] =
 {
-	L"Toggle folders list",
-	L"Toggle pictures area",
-	L"Large icons",
-	L"Small icons",
-	L"List icons",
-	L"Toggle grouped view",
-	L"Refresh",
-	L"Interface setttings",
-	L"Default games options",
-	L"Play ProgettoSnaps movie",
-	L"M1FX",
-	L"About",
-	L"Help",
-	L"MAME homepage",
-	L"Details icons",
-	L"Language game list"
+	TEXT("Toggle folders list"),
+	TEXT("Toggle pictures area"),
+	TEXT("Large icons"),
+	TEXT("Small icons"),
+	TEXT("List icons"),
+	TEXT("Toggle grouped view"),
+	TEXT("Refresh"),
+	TEXT("Interface setttings"),
+	TEXT("Default games options"),
+	TEXT("Play ProgettoSnaps movie"),
+	TEXT("M1FX"),
+	TEXT("About"),
+	TEXT("Help"),
+	TEXT("MAME homepage"),
+	TEXT("Details icons"),
+	TEXT("Language game list")
 };
 
 static const int CommandToString[] =
@@ -854,7 +859,7 @@ int MameUIMain(HINSTANCE hInstance, LPWSTR lpCmdLine)
 	wndclass.cbClsExtra = 0;
 	wndclass.cbWndExtra = DLGWINDOWEXTRA;
 	wndclass.hInstance = hInstance;
-	wndclass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
+	wndclass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MAMEUI));
 	wndclass.hCursor = NULL;
 	wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); // 修改的 代码来源 (EKMAME)
 	wndclass.lpszMenuName = MAKEINTRESOURCE(IDR_UI_MENU);
@@ -1624,6 +1629,7 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 		case WM_CTLCOLORSTATIC:
 			hDC = (HDC)wParam;
 			SetBkMode(hDC, TRANSPARENT);
+			SetTextColor(hDC, GetSysColor(COLOR_WINDOWTEXT));
 
 			if ((HWND)lParam == GetDlgItem(hMain, IDC_HISTORY))
 				SetTextColor(hDC, GetHistoryFontColor());
@@ -1912,14 +1918,8 @@ static bool GameCheck(void)
 	AuditRefresh();
 
 	if (game_index == 0)
-
-// 修改的 代码来源 (EKMAME)
-/***********************************/
-	{
 		ProgressBarShow();
-	}
-/***********************************/
-	
+
 	if (bFolderCheck == true)
 	{
 		LVITEM lvi;
@@ -2498,7 +2498,7 @@ static void UpdateStatusBar(void)
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
 	int games_shown = 0;
 	int i = -1;
-	HICON hIconFX = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI_ICON), IMAGE_ICON, 16, 16, LR_SHARED);
+	HICON hIconFX = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI), IMAGE_ICON, 16, 16, LR_SHARED);
 
 	if (!lpFolder)
 		return;
@@ -2778,9 +2778,9 @@ static void EnableSelection(int nGame)
 	SetStatusBarText(2, pStatus);
 	char *pScreen = GameInfoScreen(nGame);
 	SetStatusBarText(3, pScreen);
-	EnableMenuItem(hMenu, ID_FILE_PLAY, 		MF_ENABLED);
-	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,	MF_ENABLED);
-	EnableMenuItem(hMenu, ID_GAME_PROPERTIES, 	MF_ENABLED);
+	EnableMenuItem(hMenu, ID_FILE_PLAY, MF_ENABLED);
+	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,MF_ENABLED);
+	EnableMenuItem(hMenu, ID_GAME_PROPERTIES, MF_ENABLED);
 
 	if (bProgressShown && bListReady == true)
 
@@ -2843,7 +2843,7 @@ static bool TreeViewNotify(LPNMHDR nm)
 			TV_DISPINFO *ptvdi = (TV_DISPINFO *)nm;
 			LPTREEFOLDER folder = (LPTREEFOLDER)ptvdi->item.lParam;
 
-			if (folder->m_dwFlags & F_CUSTOM)
+			if (folder->m_dwFlags & FI_CUSTOM)
 			{
 				// user can edit custom folder names
 				g_in_treeview_edit = true;
@@ -3123,7 +3123,7 @@ static uintptr_t CALLBACK HookProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 	{
 		case WM_INITDIALOG:
 			CenterWindow(hDlg);
-			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI_ICON));
+			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI));
 			SendMessage(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 			hBrush = CreateSolidBrush(RGB(240, 240, 240));
 			if (bHookFont)
@@ -3139,6 +3139,7 @@ static uintptr_t CALLBACK HookProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM l
 		case WM_CTLCOLORBTN:
 			hDC = (HDC)wParam;
 			SetBkMode(hDC, TRANSPARENT);
+			SetTextColor(hDC, GetSysColor(COLOR_WINDOWTEXT));
 			return (LRESULT) hBrush;
 
 		case WM_COMMAND:
@@ -3977,9 +3978,9 @@ static bool MameCommand(HWND hWnd, int id, HWND hWndCtl, UINT codeNotify)
 				curOptType = OPTIONS_RASTER;
 			else if(folder->m_nFolderId == FOLDER_VECTOR) 
 				curOptType = OPTIONS_VECTOR;
-			else if(folder->m_nFolderId == FOLDER_HORIZONTAL) 
+			else if(folder->m_nFolderId == FOLDER_HORI) 
 				curOptType = OPTIONS_HORIZONTAL;
-			else if(folder->m_nFolderId == FOLDER_VERTICAL) 
+			else if(folder->m_nFolderId == FOLDER_VERT) 
 				curOptType = OPTIONS_VERTICAL;
 
 			InitPropertyPage(hInst, hWnd, curOptType, folder->m_nFolderId, Picker_GetSelectedItem(hWndList));
@@ -4610,43 +4611,6 @@ static void InitListView(void)
 	bListReady = true;
 }
 
-static void AddDriverIcon(int nItem, int default_icon_index)
-{
-	/* if already set to rom or clone icon, we've been here before */
-	if (icon_index[nItem] == 1 || icon_index[nItem] == 3)
-		return;
-
-	HICON hIcon = LoadIconFromFile((char *)GetDriverGameName(nItem));
-
-	if (hIcon == NULL)
-	{
-		int nParentIndex = GetParentIndex(&driver_list::driver(nItem));
-
-		if( nParentIndex >= 0)
-		{
-			hIcon = LoadIconFromFile((char *)GetDriverGameName(nParentIndex));
-			nParentIndex = GetParentIndex(&driver_list::driver(nParentIndex));
-
-			if (hIcon == NULL && nParentIndex >= 0)
-				hIcon = LoadIconFromFile((char *)GetDriverGameName(nParentIndex));
-		}
-	}
-
-	if (hIcon != NULL)
-	{
-		int nIconPos = ImageList_AddIcon(hSmall, hIcon);
-		ImageList_AddIcon(hLarge, hIcon);
-
-		if (nIconPos != -1)
-			icon_index[nItem] = nIconPos;
-
-		DestroyIcon(hIcon);
-	}
-
-	if (icon_index[nItem] == 0)
-		icon_index[nItem] = default_icon_index;
-}
-
 static void DestroyIcons(void)
 {
 	if (hSmall != NULL)
@@ -4864,7 +4828,7 @@ static uintptr_t CALLBACK OFNHookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	{
 		case WM_INITDIALOG:
 			CenterWindow(GetParent(hWnd));
-			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI_ICON));
+			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI));
 			SendMessage(GetParent(hWnd), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 			break;
 	}
@@ -5383,14 +5347,6 @@ int FindIconIndexByName(const char *icon_name)
 	return -1;
 }
 
-static bool UseBrokenIcon(int type)
-{
-	if (type == 4 && !GetUseBrokenIcon())
-		return false;
-
-	return true;
-}
-
 static int GetIconForDriver(int nItem)
 {
 	int iconRoms = 0;
@@ -5398,43 +5354,68 @@ static int GetIconForDriver(int nItem)
 	if (DriverUsesRoms(nItem))
 	{
 		int audit_result = GetRomAuditResults(nItem);
-
 		if (audit_result == -1)
-			iconRoms = 2;
+			iconRoms = FindIconIndex(IDI_LV_RU);  // not yet audited
 		else
-		if (IsAuditResultYes(audit_result))
-			iconRoms = 1;
+		if (IsAuditResultNo(audit_result))
+			iconRoms = FindIconIndex(IDI_LV_RN);  // roms missing
 		else
-			iconRoms = 0;
+		if (DriverIsBios(nItem))
+			iconRoms = FindIconIndex(IDI_LV_BIOS);  // bios, any status
 	}
-	else
-		iconRoms = 1;
 
-	// iconRoms is now either 0 (no roms), 1 (roms), or 2 (unknown)
-
-	/* these are indices into icon_names, which maps into our image list
-    * also must match IDI_WIN_NOROMS + iconRoms */
-
-	// Show Red-X if the ROMs are present and flagged as NOT WORKING
-	if (iconRoms == 1 && DriverIsBroken(nItem))
-		iconRoms = FindIconIndex(IDI_WIN_REDX);
-
-	// Show imperfect if the ROMs are present and flagged as imperfect
-	if (iconRoms == 1 && DriverIsImperfect(nItem))
-		iconRoms = FindIconIndex(IDI_WIN_IMPERFECT);
-
-	// show clone icon if we have roms and game is working
-	if (iconRoms == 1 && DriverIsClone(nItem))
-		iconRoms = FindIconIndex(IDI_WIN_CLONE);
-
-	// if we have the roms, then look for a custom per-game icon to override
-	if (iconRoms == 1 || iconRoms == 3 || iconRoms == 5 || !UseBrokenIcon(iconRoms))
+	if (iconRoms == 0)
 	{
-		if (icon_index[nItem] == 0)
-			AddDriverIcon(nItem,iconRoms);
+		iconRoms =  FindIconIndex(IDI_LV_PW);  // start by assuming it's a working parent
 
-		iconRoms = icon_index[nItem];
+		// see order of icons in layout.cpp g_iconData
+		// Show red if NOT WORKING
+		if (DriverIsBroken(nItem))
+		{
+			if (GetUseBrokenIcon()==0)
+				iconRoms = FindIconIndex(IDI_LV_PN); // red chip
+			else
+				iconRoms = FindIconIndex(IDI_LV_PX); // red X. If driver icons chosen but not found, use this.
+		}
+		else
+		// Show yellow if imperfect
+		if (DriverIsImperfect(nItem))
+			iconRoms = FindIconIndex(IDI_LV_PI);
+
+		// show faded if clone
+		if (DriverIsClone(nItem))
+			iconRoms--; // use clone icon instead of parent one
+
+		// Look for a custom per-game icon to override
+		BOOL redx = (GetUseBrokenIcon()==1) && DriverIsBroken(nItem);
+		if (iconRoms > 4 || redx)
+		{
+			HICON hIcon = LoadIconFromFile((char *)driver_list::driver(nItem).name);
+			if (hIcon == NULL)
+			{
+				int nParentIndex = GetParentIndex(&driver_list::driver(nItem));
+				if( nParentIndex >= 0)
+				{
+					hIcon = LoadIconFromFile((char *)driver_list::driver(nParentIndex).name);
+					nParentIndex = GetParentIndex(&driver_list::driver(nParentIndex));
+					if (hIcon == NULL && nParentIndex >= 0)
+						hIcon = LoadIconFromFile((char *)driver_list::driver(nParentIndex).name);
+				}
+			}
+
+			if (hIcon)  // a driver icon was found
+			{
+				int nIconPos = ImageList_AddIcon(hSmall, hIcon);
+				ImageList_AddIcon(hLarge, hIcon);
+				if (nIconPos != -1)
+					iconRoms = nIconPos;
+				DestroyIcon(hIcon);
+			}
+		}
 	}
+
+	// finally, into the listview
+	icon_index[nItem] = iconRoms;
 
 	return iconRoms;
 }
@@ -5575,7 +5556,7 @@ static void UpdateMenu(HMENU hMenu)
 		EnableMenuItem(hMenu, ID_CONTEXT_SELECT_RANDOM, MF_GRAYED);
 	}
 
-	if (lpFolder->m_dwFlags & F_CUSTOM)
+	if (lpFolder->m_dwFlags & FI_CUSTOM)
 	{
 		EnableMenuItem(hMenu, ID_CONTEXT_REMOVE_CUSTOM, MF_ENABLED);
 		EnableMenuItem(hMenu, ID_CONTEXT_RENAME_CUSTOM, MF_ENABLED);
@@ -5586,7 +5567,7 @@ static void UpdateMenu(HMENU hMenu)
 		EnableMenuItem(hMenu, ID_CONTEXT_RENAME_CUSTOM, MF_GRAYED);
 	}
 
-	if (lpFolder->m_dwFlags & F_INIEDIT)
+	if (lpFolder->m_dwFlags & FI_INIEDIT)
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES, MF_ENABLED);
 	else
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES, MF_GRAYED);
@@ -5934,7 +5915,7 @@ static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 			int height = 0;
 			RECT rect2;
 			int nBordersize = GetScreenshotBorderSize();
-			HBRUSH hBrush = CreateSolidBrush(GetScreenshotBorderColor());
+			HBRUSH hBrushBord = CreateSolidBrush(GetScreenshotBorderColor());
 
 			hdc = BeginPaint(hWnd, &ps);
 			hdc_temp = CreateCompatibleDC(hdc);
@@ -5981,17 +5962,19 @@ static LRESULT CALLBACK PictureWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 			HRGN region1 = CreateRectRgnIndirect(&rect);
 			HRGN region2 = CreateRectRgnIndirect(&rect2);
 			CombineRgn(region2, region2, region1, RGN_DIFF);
-			HBRUSH holdBrush = (HBRUSH)SelectObject(hdc, hBrush);
-			FillRgn(hdc,region2, hBrush);
+			HBRUSH holdBrush = (HBRUSH)SelectObject(hdc, hBrushBord);
+			FillRgn(hdc, region2, hBrushBord);
 			SelectObject(hdc, holdBrush);
-			DeleteBrush(hBrush);
+			DeleteBrush(hBrushBord);
 			SetStretchBltMode(hdc, STRETCH_HALFTONE);
 			StretchBlt(hdc,nBordersize,nBordersize,rect.right-rect.left,rect.bottom-rect.top, hdc_temp, 0, 0, width, height, SRCCOPY);
 			SelectObject(hdc_temp,old_bitmap);
 			DeleteDC(hdc_temp);
 			DeleteObject(region1);
 			DeleteObject(region2);
-			EndPaint(hWnd,&ps);
+			DeleteObject(hBrushBord);
+			DeleteObject(holdBrush);
+			EndPaint(hWnd, &ps);
 			return true;
 		}
 	}
@@ -6013,7 +5996,7 @@ static void RemoveGameCustomFolder(int driver_index)
 
 	for (int i = 0; i < num_folders; i++)
 	{
-		if (folders[i]->m_dwFlags & F_CUSTOM && folders[i]->m_nFolderId == GetCurrentFolderID())
+		if (folders[i]->m_dwFlags & FI_CUSTOM && folders[i]->m_nFolderId == GetCurrentFolderID())
 		{
 			RemoveFromCustomFolder(folders[i], driver_index);
 
@@ -6126,7 +6109,7 @@ static void ButtonUpListViewDrag(POINTS p)
 
 		LPTREEFOLDER folder = GetCurrentFolder();
 
-		if (folder->m_dwFlags & F_CUSTOM)
+		if (folder->m_dwFlags & FI_CUSTOM)
 		{
 			/* dragged out of a custom folder, so let's remove it */
 			RemoveCurrentGameCustomFolder();
@@ -6544,7 +6527,7 @@ static void SaveGameListToFile(char *szFile)
 		fprintf(f, "%s", lpF->m_lpTitle);
 	}
 	fprintf(f, "\\");
-	fprintf(f, "%s>%s.%s", lpFolder->m_lpTitle, (lpFolder->m_dwFlags & F_CUSTOM) ? " (custom folder)" : "", CrLf);
+	fprintf(f, "%s>%s.%s", lpFolder->m_lpTitle, (lpFolder->m_dwFlags & FI_CUSTOM) ? " (custom folder)" : "", CrLf);
 
 	// Sorting
 	if (GetSortColumn() > 0)

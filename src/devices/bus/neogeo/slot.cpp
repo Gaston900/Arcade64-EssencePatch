@@ -200,44 +200,8 @@ static const neogeo_slot slot_list[] =
 	{ NEOGEO_KOG, "boot_kog" },
 	{ NEOGEO_SBP, "boot_sbp" },
 	{ NEOGEO_KOF10TH, "boot_kf10th" },
-
-// 修改的 (Gaston90) 
-/******************************************************************/
-// ===============================> NEOGEO_DECRYPT_CART_DEVICE
-	{ NEOGEO_CTHD2K3A, "boot_cthd2k3a" },
-	{ NEOGEO_JCKEYGPD, "cmc50_jckeygpd" },
-	{ NEOGEO_KOF10THU, "boot_kf10thu" },
-	{ NEOGEO_KOF96EP, "boot_kof96ep" },
-	{ NEOGEO_KOF97PLA, "boot_kof97pla" },
-	{ NEOGEO_KOF2K2D, "k2k2_kof2k2d" },
-	{ NEOGEO_KF2K1PA, "boot_kf2k1pa" },
-	{ NEOGEO_KOF2K2PD, "boot_kf2k2pd" },
-	{ NEOGEO_KOF2K2MPD, "boot_kf2k2mpd" },
-	{ NEOGEO_KOF2K2MP2D, "boot_kf2k2mp2d" },
-	{ NEOGEO_KOF2K4PLS, "boot_kof2k4pls" },
-	{ NEOGEO_KOGD, "boot_kogd" },
-	{ NEOGEO_MATRIMD, "k2k2_matrimd" },
-	{ NEOGEO_SAMSHO5D, "k2k2_samsh5d" },
-	{ NEOGEO_SAMSHO5SD, "k2k2_sams5sd" },
-
-// ===============================> NEOGEO_DECRYPT_PVC_CART_DEVICE
-	{ NEOGEO_MSLUG5D, "pvcd_mslug5d" },
-	{ NEOGEO_MSLUG5E, "pvcd_mslug5e" },
-	{ NEOGEO_KOF2K3D, "pvcd_kf2k3d" },
-	{ NEOGEO_KOF2K3ND, "pvcd_kf2k3nd" },
-	{ NEOGEO_KOF2K3HD, "pvcd_kf2k3hd" },
-	{ NEOGEO_SVCD, "pvcd_svcd" },
-
-// ===============================> NEOGEO_SMA_DECRYPT_CART_DEVICE
-	{ NEOGEO_GAROUD, "sma_garoud" },
-	{ NEOGEO_GAROUHD, "sma_garouhd" },
-	{ NEOGEO_KOF99D, "sma_kof99d" },
-	{ NEOGEO_KOF2KD, "sma_kof2kd" },
-	{ NEOGEO_KOF2KND, "sma_kof2knd" },
-	{ NEOGEO_MSLUG3D, "sma_mslug3d" },
-
-/******************************************************************/
 };
+
 
 static int neogeo_get_pcb_id(const char *slot)
 {
@@ -260,7 +224,8 @@ void neogeo_cart_slot_device::set_cart_type(const char *slot)
  call load
  -------------------------------------------------*/
 
-std::pair<std::error_condition, std::string> neogeo_cart_slot_device::call_load()
+
+image_init_result neogeo_cart_slot_device::call_load()
 {
 	if (m_cart)
 	{
@@ -339,10 +304,12 @@ std::pair<std::error_condition, std::string> neogeo_cart_slot_device::call_load(
 			// SPEED UP WORKAROUND: to speed up sprite drawing routine, let us store the sprite data in
 			// a different format (we then always access such alt format for drawing)
 			m_cart->optimize_sprites(m_cart->get_sprites_base(), m_cart->get_sprites_size());
+
+			return image_init_result::PASS;
 		}
 	}
 
-	return std::make_pair(std::error_condition(), std::string());
+	return image_init_result::PASS;
 }
 
 

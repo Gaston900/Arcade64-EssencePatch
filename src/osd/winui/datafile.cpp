@@ -64,7 +64,10 @@ HSOURCEINFO;
 // The order of these is the order they are displayed
 const HGAMEINFO m_gameInfo[MAX_HFILES] =
 {
+// 修改的 代码来源 (HBMAME)
+/***************************************************************************/
 	{ "gameinit.dat", "\n**** :GAMEINIT: ****\n\n",         "$mame",  1 },
+/***************************************************************************/
 	{ "history.xml",  "\n**** :HISTORY: ****\n\n",          "<text>",   1 },
 //	{ "sysinfo.dat",  "\n**** :SYSINFO: ****\n\n",          "$bio",   1 },
 //	{ "messinfo.dat", "\n**** :MESSINFO: ****\n\n",         "$mame",  1 },

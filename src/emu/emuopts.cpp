@@ -60,7 +60,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_IPSPATH,                                    "ips",       core_options::option_type::MULTIPATH,  "path to IPS patch files" },
 	{ OPTION_IPS,                                        nullptr,     core_options::option_type::STRING,     "IPS patch name" },
 	{ OPTION_SKIP_CRC_CHECK,                             "0",         core_options::option_type::BOOLEAN,    "Skip CRC and HASH checks" },
-//	{ OPTION_PGM2_MEMCARD_HACK, 						 "1", 		  core_options::option_type::BOOLEAN, 	 "Enable PGM2 without inserting a card" },
+	{ OPTION_PGM2_MEMCARD_HACK, 						 "1", 		  core_options::option_type::BOOLEAN, 	 "Enable PGM2 without inserting a card" },
 //======================================================>>>
 
 	// output directory options

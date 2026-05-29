@@ -74,38 +74,6 @@ enum
 	NEOGEO_KOF10TH,
 	NEOGEO_VLINER,
 	NEOGEO_JOCKEYGP,
-
-// 修改的 (Gaston90) 
-/***************************/
-    NEOGEO_CTHD2K3A,
-	NEOGEO_JCKEYGPD,
-	NEOGEO_KF2K1PA,
-	NEOGEO_KOF10THU,
-	NEOGEO_KOF96EP,
-	NEOGEO_KOF97PLA,
-	NEOGEO_KOF2K2D,
-	NEOGEO_KOF2K2PD,
-	NEOGEO_KOF2K2MPD,
-	NEOGEO_KOF2K2MP2D,
-	NEOGEO_KOF2K3D,
-	NEOGEO_KOF2K3ND,
-	NEOGEO_KOF2K3HD,
-	NEOGEO_KOF2K4PLS,
-	NEOGEO_KOGD,
-	NEOGEO_MATRIMD,
-	NEOGEO_MSLUG5D,
-	NEOGEO_MSLUG5E,
-	NEOGEO_SAMSHO5D,
-	NEOGEO_SAMSHO5SD,
-    NEOGEO_SVCD,
-    NEOGEO_GAROUD,
-    NEOGEO_GAROUHD,
-	NEOGEO_KOF99D,
-    NEOGEO_KOF2KD,
-	NEOGEO_KOF2KND,
-	NEOGEO_MSLUG3D,
-
-/***************************/
 };
 
 
@@ -235,15 +203,15 @@ public:
 	neogeo_cart_slot_device(const machine_config &mconfig, const char *tag, device_t *owner, uint16_t clock);
 	virtual ~neogeo_cart_slot_device();
 
-	// device_image_interface implementation
-	virtual std::pair<std::error_condition, std::string> call_load() override;
+	// image-level overrides
+	virtual image_init_result call_load() override;
 	virtual void call_unload() override;
 
 	virtual bool is_reset_on_load() const noexcept override { return true; }
 	virtual const char *image_interface() const noexcept override { return "neo_cart"; }
 	virtual const char *file_extensions() const noexcept override { return "bin"; }
 
-	// device_slot_interface implementation
+	// slot interface overrides
 	virtual std::string get_default_card_software(get_default_card_software_hook &hook) const override;
 
 	// reading and writing
@@ -360,9 +328,10 @@ public:
 										get_audio_base(), get_audio_size(),
 										get_audiocrypt_base(), get_audiocrypt_size());  }
 
+
 protected:
-	// device_t implementation
-	virtual void device_start() override ATTR_COLD;
+	// device-level overrides
+	virtual void device_start() override;
 
 private:
 	int m_type;

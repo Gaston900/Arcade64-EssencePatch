@@ -506,7 +506,7 @@ void InitPropertyPage(HINSTANCE hInst, HWND hWnd, OPTIONS_TYPE opt_type, int fol
 	pshead.dwFlags = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_DEFAULT | PSH_NOCONTEXTHELP;
 	pshead.hInstance = hInst;
 	pshead.nStartPage = 0;
-	pshead.pszIcon = MAKEINTRESOURCE(IDI_MAMEUI_ICON);
+	pshead.pszIcon = MAKEINTRESOURCE(IDI_MAMEUI);
 	pshead.ppsp = pspage;
 
 	g_nFirstInitPropertySheet = 1;
@@ -2068,9 +2068,10 @@ static void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	int nPageCount = TabCtrl_GetItemCount(hTabWnd);
 	HIMAGELIST hTreeList = ImageList_Create(32, 32, ILC_COLORDDB | ILC_MASK, nPageCount, 0);
 
+	// Assign icons to the left side of the main property sheet
 	for (int i = 0; i < nPageCount; i++)
 	{
-		HICON hIconList = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_DISPLAYSHEET + i));
+		HICON hIconList = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_PI_DISPLAY + i));
 		ImageList_AddIcon(hTreeList, hIconList);
 	}
 
@@ -2150,7 +2151,7 @@ intptr_t CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 
 			int index = lParam;
 			CenterWindow(hDlg);
-			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI_ICON));
+			hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MAMEUI));
 			SendMessage(hDlg, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
 			hBrushDlg = CreateSolidBrush(RGB(240, 240, 240));
 //=========================== 缘来是你 ================ 中文列表 ================================>>>
@@ -3588,7 +3589,7 @@ static void BuildDataMap(void)
 //==================== 缘来是你 ========================>>>
 	datamap_add(properties_datamap, IDC_IPS_LIST,               DM_STRING,  OPTION_IPS);
 	datamap_add(properties_datamap, IDC_SKIP_CRC_CHECK, 		DM_BOOL, 	OPTION_SKIP_CRC_CHECK);
-//	datamap_add(properties_datamap, IDC_PGM2_MEMCARD_HACK, 		DM_BOOL, 	OPTION_PGM2_MEMCARD_HACK);
+	datamap_add(properties_datamap, IDC_PGM2_MEMCARD_HACK, 		DM_BOOL, 	OPTION_PGM2_MEMCARD_HACK);
 	datamap_add(properties_datamap, IDC_60FPS,					DM_BOOL,	OPTION_60FPS);	//EKMAME 60fps
 //======================================================>>>	
 
@@ -4957,7 +4958,7 @@ static void DisableVisualStyles(HWND hDlg)
 
 //==================== 缘来是你 ========================>>>
 	SetWindowTheme(GetDlgItem(hDlg, IDC_SKIP_CRC_CHECK), L" ", L" ");
-//	SetWindowTheme(GetDlgItem(hDlg, IDC_PGM2_MEMCARD_HACK), L" ", L" ");
+	SetWindowTheme(GetDlgItem(hDlg, IDC_PGM2_MEMCARD_HACK), L" ", L" ");
 	SetWindowTheme(GetDlgItem(hDlg, IDC_60FPS), L" ", L" ");
 //======================================================>>>
 

@@ -119,6 +119,7 @@ extern const char *funcGetParentName(const char *name);
 #define REMOVE_DUPLICATE_CHEATS 0
 
 
+
 //**************************************************************************
 //  NUMBER AND FORMAT
 //**************************************************************************

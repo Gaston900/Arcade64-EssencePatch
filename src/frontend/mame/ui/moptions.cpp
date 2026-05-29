@@ -47,7 +47,7 @@ const options_entry ui_options::s_option_entries[] =
 	{ OPTION_SYSTEM_NAMES,                  "",                 option_type::MULTIPATH,  "translated system names file" },
 	{ OPTION_SKIP_WARNINGS,                 "0",                option_type::BOOLEAN,    "display fewer repeated warnings about imperfect emulation" },
 	{ OPTION_UNTHROTTLE_MUTE,               "0",                option_type::BOOLEAN,    "mute audio when running unthrottled or when fast-forwarding" },
-	{ OPTION_MENU_PAUSE,                    "0",                option_type::BOOLEAN,    "automatically pause when showing menus" },
+	{ OPTION_MENU_PAUSE,                    "1",                option_type::BOOLEAN,    "automatically pause when showing menus" }, // 修改的 代码来源 (加斯顿90)
 	{ OPTION_UI_FOLLOW_FOCUS,               "0",                option_type::BOOLEAN,    "open menus in active window" },
 
 	// UI options
