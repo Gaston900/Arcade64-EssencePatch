@@ -1,7 +1,7 @@
 // license:BSD-3-Clause
 // copyright-holders:Bryan McPhail,Ernesto Corvi,Andrew Prime,Zsolt Vasvari
 // thanks-to:Fuzz
-// Updated to the last version:Gaston90
+// Thank you very much for updating the driver: Gaston90
 /***************************************************************************
 
     Neo-Geo hardware

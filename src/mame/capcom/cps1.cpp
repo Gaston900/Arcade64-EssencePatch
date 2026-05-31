@@ -1,5 +1,6 @@
 // license:BSD-3-Clause
 // copyright-holders:Paul Leaman
+// Thank you very much for updating the driver: Gaston90
 /***************************************************************************
 
 Capcom System 1
