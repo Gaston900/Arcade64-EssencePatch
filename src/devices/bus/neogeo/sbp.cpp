@@ -80,6 +80,9 @@ void neogeo_sbp_cart_device::patch(uint8_t* cpurom, uint32_t cpurom_size)
 	rom[0x2a6f8/2] = 0x4e71;
 	rom[0x2a6fa/2] = 0x4e71;
 	rom[0x2a6fc/2] = 0x4e71;
+
+	// enable joystick inputs
+	rom[0x3ff2d/2] = 0x7001;
 }
 
 void neogeo_sbp_cart_device::decrypt_all(DECRYPT_ALL_PARAMS)
