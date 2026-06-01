@@ -242,8 +242,8 @@ public:
 	// Public For kf2k2ps2re
 	int m_use_cart_audio = 0;
 	uint8_t      m_card_bank = 0;
-	void gsc_map(address_map &map);
-	virtual void machine_start() override;
+	void gsc_map(address_map &map) ATTR_COLD;
+	virtual void machine_start() override ATTR_COLD;
 	required_device<cpu_device> m_maincpu;
 
 private:
@@ -273,13 +273,13 @@ private:
 	DECLARE_QUICKLOAD_LOAD_MEMBER(neo_q_cb);
 	uint32_t screen_update_neogeo(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
 
-	void neogeo_main_map(address_map &map);
-	void main_map_slot(address_map &map);
-	void audio_map(address_map &map);
-	void audio_io_map(address_map &map);
-	void main_map_noslot(address_map &map);
-	void gsc2007_map(address_map &map);
-    void neogeo_68kram_map(address_map &map);
+	void neogeo_main_map(address_map &map) ATTR_COLD;
+	void main_map_slot(address_map &map) ATTR_COLD;
+	void audio_map(address_map &map) ATTR_COLD;
+	void audio_io_map(address_map &map) ATTR_COLD;
+	void main_map_noslot(address_map &map) ATTR_COLD;
+	void gsc2007_map(address_map &map) ATTR_COLD;
+    void neogeo_68kram_map(address_map &map) ATTR_COLD;
 
 	void neogeo_postload();
 	void update_interrupts();
@@ -306,7 +306,7 @@ private:
 	void set_output_latch( uint8_t data );
 	void set_output_data( uint8_t data );
 
-	virtual void machine_reset() override;
+	virtual void machine_reset() override ATTR_COLD;
 
 	memory_bank           *m_bank_audio_cart[4]{};
 
@@ -425,10 +425,10 @@ public:
 	void ps2(machine_config &config);
 
 private:
-    void ps2_map(address_map &map);
+    void ps2_map(address_map &map) ATTR_COLD;
 
-	void audio2_map(address_map &map);
-	void audio2_io(address_map &map);
+	void audio2_map(address_map &map) ATTR_COLD;
+	void audio2_io(address_map &map) ATTR_COLD;
 	void audio2_command_w(uint8_t data);
 	uint16_t audio2_result_r();
 	uint8_t audio2_command_r();
@@ -436,8 +436,8 @@ private:
 	void audio2_check_nmi();
 	void audio2_enable_nmi_w(offs_t offset, uint8_t data);
 
-	void audio3_map(address_map &map);
-	void audio3_io(address_map &map);
+	void audio3_map(address_map &map) ATTR_COLD;
+	void audio3_io(address_map &map) ATTR_COLD;
 	void audio3_command_w(uint8_t data);
 	uint16_t audio3_result_r();
 	uint8_t audio3_command_r();
@@ -445,8 +445,8 @@ private:
 	void audio3_check_nmi();
 	void audio3_enable_nmi_w(offs_t offset, uint8_t data);
 
-	void audio4_map(address_map &map);
-	void audio4_io(address_map &map);
+	void audio4_map(address_map &map) ATTR_COLD;
+	void audio4_io(address_map &map) ATTR_COLD;
 	void audio4_command_w(uint8_t data);
 	uint16_t audio4_result_r();
 	uint8_t audio4_command_r();

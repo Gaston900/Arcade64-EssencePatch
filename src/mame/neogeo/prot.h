@@ -86,8 +86,8 @@ public:
 	uint16_t m_cartridge_ram2[0x10000]{};
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -107,8 +107,8 @@ public:
 	required_ioport m_jumper;
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 	virtual ioport_constructor device_input_ports() const override;
 };
 
@@ -167,8 +167,8 @@ public:
 	void neogeo_cmc50_m1_decrypt(uint8_t* romcrypt, uint32_t romcrypt_size, uint8_t* romaudio, uint32_t romaudio_size);
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 
 	const uint8_t *type0_t03;
 	const uint8_t *type0_t12;
@@ -200,8 +200,8 @@ public:
 	uint32_t     m_fatfury2_prot_data = 0U;
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -220,8 +220,8 @@ public:
 	void samsh5sp_decrypt_68k(uint8_t* cpurom, uint32_t cpurom_size);
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -242,8 +242,8 @@ public:
 	uint16_t m_default_rom[2]{};
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -265,8 +265,8 @@ public:
 	uint16_t     m_mslugx_command = 0U;
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -283,8 +283,8 @@ public:
 	void neo_pcm2_swap(uint8_t* ymrom, uint32_t ymsize, int value);
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -315,8 +315,8 @@ public:
 	void kof2003h_decrypt_68k(uint8_t* rom, uint32_t size);
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 
@@ -337,8 +337,8 @@ public:
 	uint16_t sbp_lowerrom_r(offs_t offset);
 
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 DECLARE_DEVICE_TYPE(SMA_PROT, sma_prot_device)
@@ -385,8 +385,8 @@ public:
 
 	uint16_t     m_sma_rng = 0U;
 protected:
-	virtual void device_start() override;
-	virtual void device_reset() override;
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
 };
 
 #endif

@@ -585,7 +585,7 @@ void ngbootleg_prot_device::decrypt_kof2k4se_68k(uint8_t* cpurom, uint32_t cpuro
 void ngbootleg_prot_device::lans2004_vx_decrypt(uint8_t* ymsndrom, uint32_t ymsndrom_size)
 {
 	uint8_t *rom = ymsndrom;
-	for (uint32_t i = 0; i < ymsndrom_size; i++)
+	for (int i = 0; i < 0xA00000; i++)
 		rom[i] = bitswap<8>(rom[i], 0, 1, 5, 4, 3, 2, 6, 7);
 }
 
@@ -1708,21 +1708,6 @@ static const uint8_t m1_address_0_7_xor[256] =
 		0x76, 0xea, 0x5c, 0x82, 0x1a, 0x4f, 0xaa, 0xca, 0xe1, 0x0b, 0x4e, 0xcb, 0x6a, 0xef, 0xd1, 0xd6,
 };
 
-
-/* The CMC50 hardware does a checksum of the first 64kb of the M1 rom,
-   ,and uses this checksum as the basis of the key with which to decrypt
-   the rom */
-
-uint16_t cmc_prot_device::generate_cs16(uint8_t *rom, int size)
-{
-	uint16_t cs16 = 0;
-	for (int i=0; i<size; i++ )
-		cs16 += rom[i];
-
-	return cs16;
-}
-
-
 int cmc_prot_device::m1_address_scramble(int address, uint16_t key)
 {
 	const int p1[8][16] = {
@@ -1761,51 +1746,41 @@ void cmc_prot_device::neogeo_cmc50_m1_decrypt(uint8_t* romcrypt, uint32_t romcry
 
 	std::vector<uint8_t> buffer(rom_size);
 
-	uint32_t i;
-
-	uint16_t key=generate_cs16(rom,0x10000);
+	/* The CMC50 hardware does a checksum of the first 64kb of the M1 rom, and
+	   uses this checksum as the basis of the key with which to decrypt the rom */
+	uint16_t key = util::sum16_creator::simple(rom, 0x10000);
 
 	//printf("key %04x\n",key);
 
-	for (i=0; i<rom_size; i++)
-		buffer[i] = rom[m1_address_scramble(i, key)];
+	for (uint32_t i = 0; i < rom_size; i++)
+		buffer[i] = rom[m1_address_scramble(i,key)];
 
-	memcpy(rom,&buffer[0],rom_size);
-	memcpy(rom2,rom,0x10000);
-	memcpy(rom2+0x10000,rom,0x80000);
+	memcpy(rom, &buffer[0], rom_size);
 
-#if 0
+	memcpy(rom2,rom, 0x10000);
+	memcpy(rom2 + 0x10000, rom, 0x80000);
+
+	if (0)
 	{
-		FILE *fp;
-		const char *gamename = machine().system().name;
-		char filename[256];
-		sprintf(filename, "%s_m1.dump", gamename);
-
-		fp=fopen(filename, "w+b");
+		auto filename = std::string(machine().system().name) + "_m1.dump";
+		auto fp = fopen(filename.c_str(), "w+b");
 		if (fp)
 		{
 			fwrite(rom, rom_size, 1, fp);
 			fclose(fp);
 		}
 	}
-#endif
 
-
-#if 0
+	if (0)
 	{
-		FILE *fp;
-		const char *gamename = machine().system().name;
-		char filename[256];
-		sprintf(filename, "%s_m1extra.dump", gamename);
-
-		fp=fopen(filename, "w+b");
+		auto filename = std::string(machine().system().name) + "_m1extra.dump";
+		auto fp = fopen(filename.c_str(), "w+b");
 		if (fp)
 		{
 			fwrite(&rom[0xf800], 0x800, 1, fp);
 			fclose(fp);
 		}
 	}
-#endif
 }
 
 /***********************************************************************************************************************************/
@@ -2632,7 +2607,7 @@ uint16_t sbp_prot_device::sbp_lowerrom_r(offs_t offset)
 {
 	uint16_t* rom = (uint16_t*)m_mainrom;
 	uint16_t origdata = rom[(offset+(0x200/2))];
-	uint16_t data =  bitswap<16>(origdata, 11,10,9,8,15,14,13,12,3,2,1,0,7,6,5,4);
+	uint16_t data = bitswap<16>(origdata, 11,10,9,8,15,14,13,12,3,2,1,0,7,6,5,4);
 	int realoffset = 0x200+(offset*2);
 	logerror("sbp_lowerrom_r offset %08x data %04x\n", realoffset, data );
 
@@ -2647,8 +2622,7 @@ void sbp_prot_device::sbp_lowerrom_w(offs_t offset, uint16_t data)
 	int realoffset = 0x200+(offset*2);
 
 	// the actual data written is just pulled from the end of the rom, and unused space
-	// maybe this is just some kind of watchdog for the protection device and it doesn't
-	// matter?
+	// maybe this is just some kind of watchdog for the protection device and it doesn't matter?
 	if (realoffset == 0x1080)
 	{
 		if (data==0x4e75)
@@ -2674,7 +2648,8 @@ void sbp_prot_device::sbp_install_protection(cpu_device* maincpu, uint8_t* cpuro
 	maincpu->space(AS_PROGRAM).install_read_handler(0x00200, 0x001fff, read16sm_delegate(*this, FUNC(sbp_prot_device::sbp_lowerrom_r)));
 	maincpu->space(AS_PROGRAM).install_write_handler(0x00200, 0x001fff, write16sm_delegate(*this, FUNC(sbp_prot_device::sbp_lowerrom_w)));
 
-	/* the game code clears the text overlay used ingame immediately after writing it.. why? protection? sloppy code that the hw ignores? imperfect emulation? */
+	// the game code clears the text overlay used ingame immediately after writing it..
+	// why? protection? sloppy code that the hw ignores? imperfect emulation?
 	{
 		uint16_t* rom = (uint16_t*)cpurom;
 
