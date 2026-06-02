@@ -112,10 +112,7 @@ public:
 		m_gfxram(*this, "gfxram"),
 		m_cps_a_regs(*this, "cps_a_regs"),
 		m_cps_b_regs(*this, "cps_b_regs"),
-		m_qsound_sharedram1(*this, "qsound_ram1"),
-		m_qsound_sharedram2(*this, "qsound_ram2"),
-		m_io_in0(*this, "IN0"),
-		m_io_in1(*this, "IN1"),
+		m_qsound_sharedram(*this, "qsound_ram%u", 1U),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
 		m_oki(*this, "oki"),
@@ -227,11 +224,6 @@ public:
 	void qsound_sharedram2_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0);
 
 	uint16_t cps1_dsw_r(offs_t offset);
-	template <unsigned Which> uint16_t cps1_in_r()
-	{
-		const int in = m_io_in[Which]->read();
-		return (in << 8) | in;
-	}
 	void cps1_coinctrl_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0);
 	uint16_t qsound_sharedram1_r(offs_t offset);
 	void qsound_sharedram1_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0);
@@ -280,11 +272,16 @@ public:
 	uint16_t  *     m_obj = nullptr;
 	uint16_t  *     m_other = nullptr;
 	std::unique_ptr<uint16_t[]>  m_buffered_obj{};
-	optional_shared_ptr<uint8_t> m_qsound_sharedram1;
-	optional_shared_ptr<uint8_t> m_qsound_sharedram2;
-
-	optional_ioport m_io_in0;
-	optional_ioport m_io_in1;
+	optional_shared_ptr_array<uint8_t, 2> m_qsound_sharedram;
+	template <unsigned Which> uint16_t qsound_sharedram_r(offs_t offset)
+	{
+		return m_qsound_sharedram[Which][offset] | 0xff00;
+	}
+	template <unsigned Which> void qsound_sharedram_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0)
+	{
+		if (ACCESSING_BITS_0_7)
+			m_qsound_sharedram[Which][offset] = data;
+	}
 
 	/* capcom/cps1_v.cpp */
 	inline uint16_t  *cps1_base( int offset, int boundary );
@@ -320,7 +317,7 @@ public:
 	std::unique_ptr<uint8_t[]> m_decrypt_kabuki{};
 
 	/* video-related */
-	tilemap_t      *m_bg_tilemap[3]{};
+	tilemap_t   *m_bg_tilemap[3]{};
 	int          m_scanline1 = 0;
 	int          m_scanline2 = 0;
 	int          m_scancalls = 0;

@@ -400,28 +400,6 @@ uint16_t cps_state::qsound_rom_r(offs_t offset)
 	}
 }
 
-uint16_t cps_state::qsound_sharedram1_r(offs_t offset)
-{
-	return m_qsound_sharedram1[offset] | 0xff00;
-}
-
-void cps_state::qsound_sharedram1_w(offs_t offset, uint16_t data, uint16_t mem_mask)
-{
-	if (ACCESSING_BITS_0_7)
-		m_qsound_sharedram1[offset] = data;
-}
-
-uint16_t cps_state::qsound_sharedram2_r(offs_t offset)
-{
-	return m_qsound_sharedram2[offset] | 0xff00;
-}
-
-void cps_state::qsound_sharedram2_w(offs_t offset, uint16_t data, uint16_t mem_mask)
-{
-	if (ACCESSING_BITS_0_7)
-		m_qsound_sharedram2[offset] = data;
-}
-
 void cps_state::qsound_banksw_w(uint8_t data)
 {
 	// Z80 bank register for music note data.
@@ -536,7 +514,7 @@ void cps_state::sub_map(address_map &map)
 	map(0x8000,0xbfff).bankr(m_audiobank);
 	map(0xd000,0xd7ff).ram();
 	map(0xf000,0xf001).rw("2151",FUNC(ym2151_device::read),FUNC(ym2151_device::write));
-	map(0xf002,0xf002).rw("oki",FUNC(okim6295_device::read),FUNC(okim6295_device::write));
+	map(0xf002,0xf002).rw(m_oki,FUNC(okim6295_device::read),FUNC(okim6295_device::write));
 	map(0xf004,0xf004).w(FUNC(cps_state::cps1_snd_bankswitch_w));
 	map(0xf006,0xf006).w(FUNC(cps_state::cps1_oki_pin7_w));  /* controls pin 7 of OKI chip */
 	map(0xf008, 0xf008).r(m_soundlatch[0], FUNC(generic_latch_8_device::read)); /* Sound command */
@@ -555,12 +533,12 @@ void cps_state::qsound_main_map(address_map &map)
 	map(0x800188,0x80018f).w(FUNC(cps_state::cps1_soundlatch2_w));  /* Sound timer fade HBMAME */
 	map(0x900000,0x92ffff).ram().w(FUNC(cps_state::cps1_gfxram_w)).share(m_gfxram);  /* SF2CE executes code from here */
 	map(0xf00000,0xf0ffff).r(FUNC(cps_state::qsound_rom_r));  /* Slammasters protection */
-	map(0xf18000,0xf19fff).rw(FUNC(cps_state::qsound_sharedram1_r),FUNC(cps_state::qsound_sharedram1_w));  /* Q RAM */
+	map(0xf18000,0xf19fff).rw(FUNC(cps_state::qsound_sharedram_r<0>), FUNC(cps_state::qsound_sharedram_w<0>));  /* Q RAM */
 	map(0xf1c000,0xf1c001).portr("IN2");  /* Player 3 controls (later games) */
 	map(0xf1c002,0xf1c003).portr("IN3");  /* Player 4 controls ("Muscle Bombers") */
 	map(0xf1c004,0xf1c005).w(FUNC(cps_state::cpsq_coinctrl2_w));  /* Coin control2 (later games) */
-	map(0xf1c006, 0xf1c007).portr("EEPROMIN").portw("EEPROMOUT");
-	map(0xf1e000,0xf1ffff).rw(FUNC(cps_state::qsound_sharedram2_r),FUNC(cps_state::qsound_sharedram2_w));  /* Q RAM */
+	map(0xf1c006,0xf1c007).portr("EEPROMIN").portw("EEPROMOUT");
+	map(0xf1e000,0xf1ffff).rw(FUNC(cps_state::qsound_sharedram_r<1>), FUNC(cps_state::qsound_sharedram_w<1>));  /* Q RAM */
 	map(0xff0000,0xffffff).ram().share(m_mainram);
 }
 
@@ -710,10 +688,10 @@ void cps_state::wofsjb_map(address_map &map)
 	map(0x800140, 0x80017f).rw(FUNC(cps_state::cps1_cps_b_r), FUNC(cps_state::cps1_cps_b_w)).share(m_cps_b_regs);    /* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
 	map(0x900000, 0x92ffff).ram().w(FUNC(cps_state::cps1_gfxram_w)).share(m_gfxram); /* SF2CE executes code from here */
 	map(0xf00000, 0xf0ffff).r(FUNC(cps_state::qsound_rom_r));           /* Slammasters protection */
-	map(0xf18000, 0xf19fff).rw(FUNC(cps_state::qsound_sharedram1_r), FUNC(cps_state::qsound_sharedram1_w));  /* Q RAM */
+	map(0xf18000, 0xf19fff).rw(FUNC(cps_state::qsound_sharedram_r<0>), FUNC(cps_state::qsound_sharedram_w<0>));  /* Q RAM */
 	map(0xf1c004, 0xf1c005).w(FUNC(cps_state::cpsq_coinctrl2_w));     /* Coin control2 (later games) */
 	map(0xf1c006, 0xf1c007).portr("EEPROMIN").portw("EEPROMOUT");
-	map(0xf1e000, 0xf1ffff).rw(FUNC(cps_state::qsound_sharedram2_r), FUNC(cps_state::qsound_sharedram2_w));  /* Q RAM */
+	map(0xf1e000, 0xf1ffff).rw(FUNC(cps_state::qsound_sharedram_r<1>), FUNC(cps_state::qsound_sharedram_w<1>));  /* Q RAM */
 	map(0xff0000, 0xffffff).ram().share(m_mainram);
 }
 
@@ -21535,7 +21513,7 @@ uint16_t cps_state::dinoh_r()
 void cps_state::dinoh_sound_command_w(uint16_t data)
 {
 	/* Pass the Sound Code to the Q-Sound Shared Ram */
-	m_qsound_sharedram1[0x0001] = data;
+	m_qsound_sharedram[0][0x0001] = data;
 }
 
 void cps_state::init_dinoh()
@@ -21994,13 +21972,13 @@ GAME( 1991, 3wondrud,    3wonders, cps1_10MHz, 3wonders, cps_state, init_cps1,  
 GAME( 1991, 3wondersha,  3wonders, cps1_10MHz, 3wonders, cps_state, init_cps1,     ROT0,   "bootleg", "Three Wonders (bootleg set 3, 910520 etc)", MACHINE_SUPPORTS_SAVE )
 GAME( 1991, captcoud,    captcomm, cps1_10MHz, captcomm, cps_state, init_cps1,     ROT0,   "bootleg", "Captain Commando (US 910928 Phoenix Edition)", MACHINE_SUPPORTS_SAVE )
 GAME( 1988, daimakaib,   ghouls,   daimakb,    daimakai, cps_state, init_cps1,     ROT0,   "bootleg", "Dai Makai-Mura (bootleg, Japan)" , MACHINE_SUPPORTS_SAVE )
-GAME( 1993, dinoh,       dino,     qsound,     dinotpic, cps_state, init_dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg set 2, 930223 Asia TW)" , MACHINE_SUPPORTS_SAVE )
-GAME( 1993, dinoha,      dino,     qsound,     dinotpic, cps_state, init_dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg set 1, 930223 Asia TW)", MACHINE_SUPPORTS_SAVE )
+GAME( 1993, dinoh,       dino,     qsound,     dinoh,    cps_state, init_dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg set 2, 930223 Asia TW)" , MACHINE_SUPPORTS_SAVE )
+GAME( 1993, dinoha,      dino,     qsound,     dinoh,    cps_state, init_dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg set 1, 930223 Asia TW)", MACHINE_SUPPORTS_SAVE )
 GAME( 1993, dinotpic,    dino,     qsound,     dinotpic, cps_state, init_dinohb,   ROT0,   "bootleg", "Cadillacs and Dinosaurs Turbo 97 (bootleg, 930201 etc)", MACHINE_SUPPORTS_SAVE )
-GAME( 1993, dinohc,      dino,     qsound,     dinotpic, cps_state, init_dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", MACHINE_NO_SOUND | MACHINE_SUPPORTS_SAVE )
+GAME( 1993, dinohc,      dino,     qsound,     dinoh,    cps_state, init_dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", MACHINE_NO_SOUND | MACHINE_SUPPORTS_SAVE )
 GAME( 1993, dinopic5,    dino,     qsound,     dinotpic, cps_state, init_dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16C57, set 5)", MACHINE_NO_SOUND | MACHINE_SUPPORTS_SAVE )
 GAME( 1993, dinod,       dino,     qsound,     dinotpic, cps_state, init_dinoeh,   ROT0,   "bootleg", "Cadillacs and Dinosaurs (World 930201 Phoenix Edition)", MACHINE_SUPPORTS_SAVE )
-GAME( 1993, dikd,        dino,     wofsf2,     dino,     cps_state, init_dinohunt, ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with YM2151 The King of Dragons)", MACHINE_SUPPORTS_SAVE )
+GAME( 1993, dikd,        dino,     wofsf2,     dinoh,    cps_state, init_dinohunt, ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with YM2151 The King of Dragons)", MACHINE_SUPPORTS_SAVE )
 GAME( 1990, cawingh,     cawing,   cps1_10MHz, cawing,   cps_state, init_cps1,     ROT0,   "bootleg", "Carrier Air Wing (bootleg)", MACHINE_SUPPORTS_SAVE )
 GAME( 2002, kodh,        kod,      cps1_10MHz, kodh,     cps_state, init_kodh,     ROT0,   "bootleg", "The King of Dragons (Bootleg / Switchable Character)", MACHINE_SUPPORTS_SAVE )
 GAME( 1991, kodda,       kod,      cps1_10MHz, kod,      cps_state, init_cps1,     ROT0,   "bootleg", "The King of Dragons (World 910731 Phoenix Edition)", MACHINE_SUPPORTS_SAVE )

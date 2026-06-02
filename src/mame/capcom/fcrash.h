@@ -69,6 +69,11 @@ protected:
 	void wofr1bl_layer_w(offs_t offset, uint16_t data);
 	void wofr1bl_layer2_w(uint16_t data);
 	void wofr1bl_spr_base_w(uint16_t data);
+	template <unsigned Which> uint16_t cps1_in_r()
+	{
+		const int in = m_io_in[Which]->read();
+		return (in << 8) | in;
+	}
 
 	uint32_t screen_update_fcrash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void fcrash_update_transmasks();
