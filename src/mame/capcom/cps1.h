@@ -114,8 +114,7 @@ public:
 		m_cps_b_regs(*this, "cps_b_regs"),
 		m_qsound_sharedram1(*this, "qsound_ram1"),
 		m_qsound_sharedram2(*this, "qsound_ram2"),
-		m_io_in0(*this, "IN0"),
-		m_io_in1(*this, "IN1"),
+		m_audiorom_raw(*this, "audiorom_raw"),
 		m_maincpu(*this, "maincpu"),
 		m_audiocpu(*this, "audiocpu"),
 		m_oki(*this, "oki"),
@@ -129,7 +128,10 @@ public:
 		m_region_stars(*this, "stars"),
 	    m_dsw(*this, "DSW%c", 'A'),
 		m_audiobank(*this, "audiobank"),
-		m_io_in(*this, "IN%u", 0U)
+		m_io_in(*this, "IN%u", 0U),
+	    m_audioregion(*this, "audiocpu"),
+		m_qsound_sharedram(*this, "qsound_ram%u", 1U),
+	    m_qsound(*this, "qsound")
 	{ }
 
 	void cps1_10MHz(machine_config &config);
@@ -283,8 +285,7 @@ public:
 	optional_shared_ptr<uint8_t> m_qsound_sharedram1;
 	optional_shared_ptr<uint8_t> m_qsound_sharedram2;
 
-	optional_ioport m_io_in0;
-	optional_ioport m_io_in1;
+	optional_region_ptr<uint8_t> m_audiorom_raw;
 
 	/* capcom/cps1_v.cpp */
 	inline uint16_t  *cps1_base( int offset, int boundary );
@@ -369,6 +370,19 @@ public:
     optional_ioport_array<3> m_dsw;
 	optional_memory_bank m_audiobank;
 	optional_ioport_array<4> m_io_in;
+	optional_memory_region m_audioregion;
+	optional_shared_ptr_array<uint8_t, 2> m_qsound_sharedram;
+	template <unsigned Which> uint16_t qsound_sharedram_r(offs_t offset)
+	{
+		return m_qsound_sharedram[Which][offset] | 0xff00;
+	}
+	template <unsigned Which> void qsound_sharedram_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0)
+	{
+		if (ACCESSING_BITS_0_7)
+			m_qsound_sharedram[Which][offset] = data;
+	}
+
+	optional_device<qsound_device> m_qsound;
 
 	TIMER_DEVICE_CALLBACK_MEMBER(ganbare_interrupt);
 
