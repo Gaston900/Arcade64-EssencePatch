@@ -95,7 +95,7 @@ extern const FOLDERDATA g_folderData[] =
 	{"Savestate",       "savestate",         FOLDER_SAVESTATE, IDI_FP_SAVESTATE, 0,              0,          0,          0, CreateSaveStateFolders },
 	{"Dumping Status",  "dumping",           FOLDER_DUMP,      IDI_FP_DUMP,      IDI_FC_CHIP,    0,          0,          1, CreateDumpingFolders },
 	{"Mechanical",      "mechanical",        FOLDER_MECH,      IDI_FP_MECH,      0,              0,          0,          0, NULL,                       DriverIsMechanical,      true },
-	{"Non Mechanical",  "nonmechanical",     FOLDER_NONMECH,   IDI_FP_DEF,       0,              0,          0,          0, NULL,                       DriverIsMechanical,      FALSE },
+	{"Non Mechanical",  "nonmechanical",     FOLDER_NONMECH,   IDI_FP_NONMECH,   0,              0,          0,          0, NULL,                       DriverIsMechanical,      FALSE },
 	{"Refresh",         "refresh",           FOLDER_FPS,       IDI_FP_FPS,       IDI_FP_DEF,     0,          0,          1, CreateFPSFolders },
 	{"Resolution",      "resolution",        FOLDER_RESOL,     IDI_FP_RESOL,     IDI_FC_MONITOR, 0,          0,          1, CreateResolutionFolders },
 	{"Sound",           "sound",             FOLDER_SOUND,     IDI_FP_SOUND,     IDI_FC_SOUND,   0,          0,          1, CreateSoundFolders },
