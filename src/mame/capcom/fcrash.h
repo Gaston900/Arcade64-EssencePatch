@@ -22,6 +22,7 @@ public:
 		: cps_state(mconfig, type, tag)
 		, m_msm(*this, "msm%u", 1U)
 		, m_okibank(*this, "okibank")
+	    , m_dsw(*this, { "DSWA", "DSWB", "DSWC" })
 	{ }
 
 	void fcrash(machine_config &config);
@@ -69,11 +70,6 @@ protected:
 	void wofr1bl_layer_w(offs_t offset, uint16_t data);
 	void wofr1bl_layer2_w(uint16_t data);
 	void wofr1bl_spr_base_w(uint16_t data);
-	template <unsigned Which> uint16_t cps1_in_r()
-	{
-		const int in = m_io_in[Which]->read();
-		return (in << 8) | in;
-	}
 
 	uint32_t screen_update_fcrash(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	void fcrash_update_transmasks();
@@ -115,6 +111,8 @@ protected:
 	optional_device_array<msm5205_device, 2> m_msm;
 
 	optional_memory_bank m_okibank;
+
+    optional_ioport_array<3> m_dsw;
 };
 
 class cps1bl_no_brgt : public fcrash_state

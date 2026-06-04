@@ -13,10 +13,8 @@ Paul Leaman (paul@vortexcomputing.demon.co.uk)
 
 68000 clock speeds are unknown for all games (except where commented)
 
-TODO:
-- move the bootleg sets with modified hardware into their own
-  drivers, like capcom/fcrash.cpp
-- verify wait cycle when accessing ROM/RAMs
+todo: move the bootleg sets with modified hardware into their own
+      drivers, like capcom/fcrash.cpp
 
 
 Notes
@@ -246,8 +244,10 @@ Stephh's log (2006.09.20) :
 #include "cps1.h"
 
 #include "cpu/z80/z80.h"
+#include "cpu/pic16c5x/pic16c5x.h"
 #include "machine/eepromser.h"
 #include "machine/upd4701.h"
+#include "sound/qsound.h"
 #include "sound/ymopm.h"
 
 #include "kabuki.h"
@@ -287,8 +287,7 @@ uint16_t cps_state::cps1_in3_r()
 	return (in << 8) | in;
 }
 
-// 缘来是你
-/******************************* MAMEPLUS *****************************************/
+//================ 缘来是你：MAMEPLUS =============>>>
 uint16_t cps_state::wof_hack_dsw_r(offs_t offset)
 {
 	static const char *const dswname[] = { "DSWA", "DSWB", "DSWC" };
@@ -302,7 +301,7 @@ uint16_t cps_state::cps1_in0_r()
 	int in = ioport("IN0")->read();
 	return (in << 8) | in;
 }
-/***********************************************************************************/
+//====================================================>>>
 
 void cps_state::cps1_snd_bankswitch_w(uint8_t data)
 {
@@ -352,6 +351,14 @@ void cps_state::cpsq_coinctrl2_w(offs_t offset, uint16_t data, uint16_t mem_mask
 	}
 }
 
+
+/********************************************************************
+*
+*  Interrupts
+*  ==========
+*
+********************************************************************/
+
 INTERRUPT_GEN_MEMBER(cps_state::cps1_interrupt)
 {
 	/* Strider also has a IRQ4 handler. It is input port related, but the game */
@@ -400,9 +407,31 @@ uint16_t cps_state::qsound_rom_r(offs_t offset)
 	}
 }
 
+uint16_t cps_state::qsound_sharedram1_r(offs_t offset)
+{
+	return m_qsound_sharedram1[offset] | 0xff00;
+}
+
+void cps_state::qsound_sharedram1_w(offs_t offset, uint16_t data, uint16_t mem_mask)
+{
+	if (ACCESSING_BITS_0_7)
+		m_qsound_sharedram1[offset] = data;
+}
+
+uint16_t cps_state::qsound_sharedram2_r(offs_t offset)
+{
+	return m_qsound_sharedram2[offset] | 0xff00;
+}
+
+void cps_state::qsound_sharedram2_w(offs_t offset, uint16_t data, uint16_t mem_mask)
+{
+	if (ACCESSING_BITS_0_7)
+		m_qsound_sharedram2[offset] = data;
+}
+
 void cps_state::qsound_banksw_w(uint8_t data)
 {
-	// Z80 bank register for music note data.
+	/* Z80 bank register for music note data. It's odd that it isn't encrypted though. */
 	int bank = data & 0x0f;
 	if ((0x10000 + (bank * 0x4000)) >= memregion("audiocpu")->bytes())
 	{
@@ -502,10 +531,10 @@ void cps_state::main_map(address_map &map)
 void cps_state::forgottn_map(address_map &map)
 {
 	main_map(map);
-	map(0x800040,0x800041).w("upd4701",FUNC(upd4701_device::reset_x_w)).umask16(0x00ff);
-	map(0x800048,0x800049).w("upd4701",FUNC(upd4701_device::reset_y_w)).umask16(0x00ff);
-	map(0x800052,0x800055).r("upd4701",FUNC(upd4701_device::read_x)).umask16(0x00ff);
-	map(0x80005a,0x80005d).r("upd4701",FUNC(upd4701_device::read_y)).umask16(0x00ff);
+	map(0x800041,0x800041).w("upd4701", FUNC(upd4701_device::reset_x_w));
+	map(0x800049,0x800049).w("upd4701", FUNC(upd4701_device::reset_y_w));
+	map(0x800052,0x800055).r("upd4701", FUNC(upd4701_device::read_x)).umask16(0x00ff);
+	map(0x80005a,0x80005d).r("upd4701", FUNC(upd4701_device::read_y)).umask16(0x00ff);
 }
 
 void cps_state::sub_map(address_map &map)
@@ -514,11 +543,11 @@ void cps_state::sub_map(address_map &map)
 	map(0x8000,0xbfff).bankr(m_audiobank);
 	map(0xd000,0xd7ff).ram();
 	map(0xf000,0xf001).rw("2151",FUNC(ym2151_device::read),FUNC(ym2151_device::write));
-	map(0xf002,0xf002).rw(m_oki,FUNC(okim6295_device::read),FUNC(okim6295_device::write));
+	map(0xf002,0xf002).rw("oki",FUNC(okim6295_device::read),FUNC(okim6295_device::write));
 	map(0xf004,0xf004).w(FUNC(cps_state::cps1_snd_bankswitch_w));
 	map(0xf006,0xf006).w(FUNC(cps_state::cps1_oki_pin7_w));  /* controls pin 7 of OKI chip */
-	map(0xf008, 0xf008).r(m_soundlatch[0], FUNC(generic_latch_8_device::read)); /* Sound command */
-	map(0xf00a, 0xf00a).r(m_soundlatch[1], FUNC(generic_latch_8_device::read)); /* Sound timer fade */
+	map(0xf008,0xf008).r(m_soundlatch[0], FUNC(generic_latch_8_device::read)); /* Sound command */
+	map(0xf00a,0xf00a).r(m_soundlatch[1], FUNC(generic_latch_8_device::read)); /* Sound timer fade */
 }
 
 void cps_state::qsound_main_map(address_map &map)
@@ -533,12 +562,12 @@ void cps_state::qsound_main_map(address_map &map)
 	map(0x800188,0x80018f).w(FUNC(cps_state::cps1_soundlatch2_w));  /* Sound timer fade HBMAME */
 	map(0x900000,0x92ffff).ram().w(FUNC(cps_state::cps1_gfxram_w)).share(m_gfxram);  /* SF2CE executes code from here */
 	map(0xf00000,0xf0ffff).r(FUNC(cps_state::qsound_rom_r));  /* Slammasters protection */
-	map(0xf18000,0xf19fff).rw(FUNC(cps_state::qsound_sharedram_r<0>), FUNC(cps_state::qsound_sharedram_w<0>));  /* Q RAM */
+	map(0xf18000,0xf19fff).rw(FUNC(cps_state::qsound_sharedram1_r), FUNC(cps_state::qsound_sharedram1_w));  /* Q RAM */
 	map(0xf1c000,0xf1c001).portr("IN2");  /* Player 3 controls (later games) */
 	map(0xf1c002,0xf1c003).portr("IN3");  /* Player 4 controls ("Muscle Bombers") */
 	map(0xf1c004,0xf1c005).w(FUNC(cps_state::cpsq_coinctrl2_w));  /* Coin control2 (later games) */
 	map(0xf1c006,0xf1c007).portr("EEPROMIN").portw("EEPROMOUT");
-	map(0xf1e000,0xf1ffff).rw(FUNC(cps_state::qsound_sharedram_r<1>), FUNC(cps_state::qsound_sharedram_w<1>));  /* Q RAM */
+	map(0xf1e000,0xf1ffff).rw(FUNC(cps_state::qsound_sharedram2_r), FUNC(cps_state::qsound_sharedram2_w));  /* Q RAM */
 	map(0xff0000,0xffffff).ram().share(m_mainram);
 }
 
@@ -688,10 +717,10 @@ void cps_state::wofsjb_map(address_map &map)
 	map(0x800140, 0x80017f).rw(FUNC(cps_state::cps1_cps_b_r), FUNC(cps_state::cps1_cps_b_w)).share(m_cps_b_regs);    /* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
 	map(0x900000, 0x92ffff).ram().w(FUNC(cps_state::cps1_gfxram_w)).share(m_gfxram); /* SF2CE executes code from here */
 	map(0xf00000, 0xf0ffff).r(FUNC(cps_state::qsound_rom_r));           /* Slammasters protection */
-	map(0xf18000, 0xf19fff).rw(FUNC(cps_state::qsound_sharedram_r<0>), FUNC(cps_state::qsound_sharedram_w<0>));  /* Q RAM */
+	map(0xf18000, 0xf19fff).rw(FUNC(cps_state::qsound_sharedram1_r), FUNC(cps_state::qsound_sharedram1_w));  /* Q RAM */
 	map(0xf1c004, 0xf1c005).w(FUNC(cps_state::cpsq_coinctrl2_w));     /* Coin control2 (later games) */
 	map(0xf1c006, 0xf1c007).portr("EEPROMIN").portw("EEPROMOUT");
-	map(0xf1e000, 0xf1ffff).rw(FUNC(cps_state::qsound_sharedram_r<1>), FUNC(cps_state::qsound_sharedram_w<1>));  /* Q RAM */
+	map(0xf1e000, 0xf1ffff).rw(FUNC(cps_state::qsound_sharedram2_r), FUNC(cps_state::qsound_sharedram2_w));  /* Q RAM */
 	map(0xff0000, 0xffffff).ram().share(m_mainram);
 }
 
@@ -978,11 +1007,12 @@ static INPUT_PORTS_START( forgottn )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("DIAL0")
-	PORT_BIT( 0x0fff, 0x0000, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20) PORT_RESET PORT_CODE_DEC(KEYCODE_Z) PORT_CODE_INC(KEYCODE_X) PORT_PLAYER(1)
+	PORT_BIT( 0x0fff, 0x0000, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20) PORT_CODE_DEC(KEYCODE_Z) PORT_CODE_INC(KEYCODE_X) PORT_PLAYER(1)
 
 	PORT_START("DIAL1")
-	PORT_BIT( 0x0fff, 0x0000, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20) PORT_RESET PORT_CODE_DEC(KEYCODE_N) PORT_CODE_INC(KEYCODE_M) PORT_PLAYER(2)
+	PORT_BIT( 0x0fff, 0x0000, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20) PORT_CODE_DEC(KEYCODE_N) PORT_CODE_INC(KEYCODE_M) PORT_PLAYER(2)
 INPUT_PORTS_END
+
 
 static INPUT_PORTS_START( forgottnj ) // Where's the Demo Sound????
 	PORT_INCLUDE( cps1_1b )
@@ -1021,7 +1051,7 @@ static INPUT_PORTS_START( forgottnj ) // Where's the Demo Sound????
 	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x06, "2 Coins / 2 Credits" ) // Must insert 2 coins to get a credit, but credits come in 2s
+	PORT_DIPSETTING(    0x06, DEF_STR( 2C_2C ) ) // Must insert 2 coins to get a credit, but credits come in 2s
 	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) )
@@ -1030,7 +1060,7 @@ static INPUT_PORTS_START( forgottnj ) // Where's the Demo Sound????
 	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x30, "2 Coins / 2 Credits" ) // Must insert 2 coins to get a credit, but credits come in 2s
+	PORT_DIPSETTING(    0x30, DEF_STR( 2C_2C ) ) // Must insert 2 coins to get a credit, but credits come in 2s
 	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x18, DEF_STR( 1C_6C ) )
@@ -1063,9 +1093,9 @@ static INPUT_PORTS_START( ghouls )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )      PORT_DIPLOCATION("SW(C):5")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unused ) )           PORT_DIPLOCATION("SW(C):6")
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )              // "Demo Sounds" in manual; doesn't work
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Demo_Sounds ) )      PORT_DIPLOCATION("SW(C):6") /* not much demo sound, just effects in gameplay section of attract sequence */
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("SW(C):7")
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
@@ -1569,14 +1599,15 @@ static INPUT_PORTS_START( unsquad )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
-   or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
+/* Final Fight button 3 is not officially documented and does not exist on the control panel, probably a leftover.
+   Pressing it will allow you to escape from grabs and choke holds instantly.
+
+   To access the hidden pattern test modes, turn the "Service Mode" dip to ON, and hold down "P1 Button 1"
+   ('Ctrl') or "P1 Button 2" ('Alt') during the bootup test. Button 1 will load the Scroll (Background) test,
+   and Button 2 will load an Obj (Sprite) viewer.
+*/
 static INPUT_PORTS_START( ffight )
 	PORT_INCLUDE( cps1_3b )
-
-	PORT_MODIFY("IN1")
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME ("P1 Button 3 (Cheat)")
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_NAME ("P2 Button 3 (Cheat)")
 
 	PORT_START("DSWA")
 	CPS1_COINAGE_1( "SW(A)" )
@@ -2073,7 +2104,7 @@ static INPUT_PORTS_START( sf2j )
 
 	PORT_MODIFY("DSWB")
 	PORT_DIPNAME( 0x08, 0x00, "2 Players Game" )                    PORT_DIPLOCATION("SW(B):4")
-	PORT_DIPSETTING(    0x08, "1 Credit/No Continue" )
+	PORT_DIPSETTING(    0x08, "1 Credit/No Continue" ) // 1 Credit for versus play, and "Here comes a new challenger" option is disabled
 	PORT_DIPSETTING(    0x00, "2 Credits/Winner Continue" ) //Winner stays, loser pays, in other words.
 INPUT_PORTS_END
 
@@ -2684,12 +2715,12 @@ INPUT_PORTS_START( dino )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START( "EEPROMIN" )
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device:: do_read))
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device::do_read))
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device:: di_write))
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device:: clk_write))
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device:: cs_write))
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device::di_write))
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device::clk_write))
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_93cxx_device::cs_write))
 INPUT_PORTS_END
 
 
@@ -3040,7 +3071,7 @@ static INPUT_PORTS_START( qadjr )
 	PORT_INCLUDE( qad )
 
 	PORT_MODIFY("DSWB")
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) )               PORT_DIPLOCATION("SW(B):1,2,3")
+	PORT_DIPNAME( 0x07, 0x05, DEF_STR( Difficulty ) )               PORT_DIPLOCATION("SW(B):1,2,3")
 	PORT_DIPSETTING(    0x07, "0" )
 	PORT_DIPSETTING(    0x06, "1" )
 	PORT_DIPSETTING(    0x05, "2" )
@@ -3049,8 +3080,8 @@ static INPUT_PORTS_START( qadjr )
 //  PORT_DIPSETTING(    0x02, "4" )
 //  PORT_DIPSETTING(    0x01, "4" )
 //  PORT_DIPSETTING(    0x00, "4" )
-	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "SW(B):4" )
-	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "SW(B):5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "SW(B):4" )                 // Unused according to manual
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "SW(B):5" )                 // Unused according to manual
 	PORT_DIPNAME( 0xe0, 0xe0, DEF_STR( Lives ) )                    PORT_DIPLOCATION("SW(B):6,7,8")
 	PORT_DIPSETTING(    0xa0, "1" )
 	PORT_DIPSETTING(    0xc0, "2" )
@@ -3060,6 +3091,11 @@ static INPUT_PORTS_START( qadjr )
 //  PORT_DIPSETTING(    0x80, "1" )
 //  PORT_DIPSETTING(    0x40, "2" )
 //  PORT_DIPSETTING(    0x60, "3" )
+
+	PORT_MODIFY("DSWC")
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )              PORT_DIPLOCATION("SW(C):6")
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )                      // Manual states default is OFF
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_MODIFY("IN2")  /* check code at 0x000c48 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -3640,16 +3676,17 @@ static INPUT_PORTS_START( ganbare )
 INPUT_PORTS_END
 
 
+// Hold any side select + start for service mode
 static INPUT_PORTS_START( sfzch )
 	PORT_START("IN0")     /* IN0 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5) PORT_PLAYER(1)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5) PORT_PLAYER(2)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE) PORT_NAME(DEF_STR(Pause)) PORT_CODE(KEYCODE_F1) /* pause */
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE  )   /* pause */
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6) PORT_PLAYER(1)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6) PORT_PLAYER(2)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SELECT ) PORT_PLAYER(1)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SELECT ) PORT_PLAYER(2)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
 
 	PORT_START("DSWA")
 	PORT_DIPNAME( 0xff, 0xff, DEF_STR( Unknown ) )
@@ -3667,22 +3704,22 @@ static INPUT_PORTS_START( sfzch )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("IN1")     /* Player 1 & 2 */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT) PORT_PLAYER(1) PORT_8WAY
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT) PORT_PLAYER(1) PORT_8WAY
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN) PORT_PLAYER(1) PORT_8WAY
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP) PORT_PLAYER(1) PORT_8WAY
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1) PORT_PLAYER(1)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2) PORT_PLAYER(1)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3) PORT_PLAYER(1)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4) PORT_PLAYER(1)
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT) PORT_PLAYER(2) PORT_8WAY
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT) PORT_PLAYER(2) PORT_8WAY
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN) PORT_PLAYER(2) PORT_8WAY
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP) PORT_PLAYER(2) PORT_8WAY
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1) PORT_PLAYER(2)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2) PORT_PLAYER(2)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3) PORT_PLAYER(2)
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4) PORT_PLAYER(2)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1) PORT_8WAY
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1) PORT_8WAY
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1) PORT_8WAY
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1) PORT_8WAY
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(2) PORT_8WAY
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(2) PORT_8WAY
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(2) PORT_8WAY
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2) PORT_8WAY
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
 
 	PORT_START("IN2")      /* Player 3, wofch */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
@@ -3799,6 +3836,26 @@ static INPUT_PORTS_START( pokonyan )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE_DIPLOC( 0x80, IP_ACTIVE_LOW, "SW(C):8" )
+INPUT_PORTS_END
+
+static const ioport_value mpumpkin_handle[] = { 0, 1, 3, 2 };
+
+static INPUT_PORTS_START( mpumpkin )
+	PORT_INCLUDE( pokonyan )
+
+	PORT_MODIFY("IN0")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0003, 0x0000, IPT_POSITIONAL ) PORT_POSITIONS(4) PORT_REMAP_TABLE(mpumpkin_handle) PORT_SENSITIVITY(100) PORT_KEYDELTA(1) PORT_CENTERDELTA(0) PORT_WRAPS
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 ) // Kitty
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON1 ) // Keroppi
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) // Badtz-Maru
+	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 /***************************************************** HBMAME ************************************************************/
@@ -4052,7 +4109,6 @@ static INPUT_PORTS_START( wofsjsa )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3) PORT_NAME("P3 Button 1 + Button 2 Special Attack") PORT_CONDITION("IN2", 0x30, EQUALS, 0x30)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
-
 
 	PORT_START("DSWA")		/* (not used, EEPROM) */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -4508,6 +4564,7 @@ void cps_state::wofssj(machine_config &config)
 ***************************************************************************/
 
 #define CODE_SIZE 0x400000
+
 /* B-Board 88621B-2 */
 /*
    There are 4 surface mounted ROMs each on it's own small 88621B-sub satellite board, type HN62404FP-18 package is QFP44.
@@ -20986,7 +21043,8 @@ void cps_state::init_sf2rb()
 {
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0x200000, 0x2fffff, read16sm_delegate(*this, FUNC(cps_state::sf2rb_prot_r)));
 
-	init_cps1();}
+	init_cps1();
+}
 
 uint16_t cps_state::sf2rb2_prot_r(offs_t offset)
 {
@@ -21081,16 +21139,16 @@ void cps_state::init_sf2dongb()
 
 uint16_t cps_state::sf2ceblp_prot_r()
 {
-	if (sf2ceblp_prot == 0x0)
+	if (m_sf2ceblp_prot == 0x0)
 		return 0x1992;
-	if (sf2ceblp_prot == 0x04)
+	if (m_sf2ceblp_prot == 0x04)
 		return 0x0408;
 	return 0xffff;
 }
 
 void cps_state::sf2ceblp_prot_w(uint16_t data)
 {
-	sf2ceblp_prot = data;
+	m_sf2ceblp_prot = data;
 }
 
 
@@ -21447,7 +21505,7 @@ void cps_state::init_dinohunt()
 {
 	// is this shared with the new sound hw?
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf18000, 0xf19fff, read16smo_delegate(*this, FUNC(cps_state::dinohunt_sound_r)));
-	m_maincpu->space(AS_PROGRAM).install_read_port(0xfc0000, 0xfc0001, "IN2"); ;
+	m_maincpu->space(AS_PROGRAM).install_read_port(0xfc0000, 0xfc0001, "IN2");
 	// the ym2151 doesn't seem to be used. Is it actually on the PCB?
 
 	init_cps1();
@@ -21458,8 +21516,41 @@ void cps_state::sf2m3_layer_w(offs_t offset, uint16_t data)
 	cps1_cps_b_w(0x0a,data);
 }
 
+void cps_state::varthb2_cps_a_w(offs_t offset, uint16_t data)
+{
+	// cps-a regs are updated as normal by original code,
+	// but bootleg code ignores them and uses these regions instead:
+	if (offset == 0x00 / 2)
+	{
+		m_cps_a_regs[offset] = 0x9100;
+		return;
+	}
+	if (offset == 0x02 / 2)
+	{
+		m_cps_a_regs[offset] = 0x90c0;
+		return;
+	}
+	if (offset == 0x04 / 2)
+	{
+		m_cps_a_regs[offset] = 0x9040;
+		return;
+	}
+	if (offset == 0x06 / 2)
+	{
+		m_cps_a_regs[offset] = 0x9080;
+		return;
+	}
+	if (offset == 0x0a / 2)
+	{
+		m_cps_a_regs[offset] = 0x9000;
+		return;
+	}
+
+	m_cps_a_regs[offset] = data;
+}
+
 // 缘来是你
-/*********************************************** MAMEPlus Extra  ***********************************************/
+/*********************************************** MAMEPlus Extra  *****************************************************/
 void cps_state::init_kodh()
 {
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0xf1c000, 0xf1c001, read16smo_delegate(*this, FUNC(cps_state::cps1_in2_r)));
@@ -21513,7 +21604,7 @@ uint16_t cps_state::dinoh_r()
 void cps_state::dinoh_sound_command_w(uint16_t data)
 {
 	/* Pass the Sound Code to the Q-Sound Shared Ram */
-	m_qsound_sharedram[0][0x0001] = data;
+	m_qsound_sharedram1[0x0001] = data;
 }
 
 void cps_state::init_dinoh()
@@ -21686,43 +21777,8 @@ void cps_state::init_wofsjs()
 	m_maincpu->space(AS_PROGRAM).install_read_handler(0x800176, 0x800177, read16smo_delegate(*this, FUNC(cps_state::cps1_in2_r)));
 }
 
-/**************************************************************************************************************/
+/*********************************************************************************************************************/
 	
-void cps_state::varthb2_cps_a_w(offs_t offset, uint16_t data)
-{
-	// cps-a regs are updated as normal by original code,
-	// but bootleg code ignores them and uses these regions instead:
-	if (offset == 0x00 / 2)
-	{
-		m_cps_a_regs[offset] = 0x9100;
-		return;
-	}
-	if (offset == 0x02 / 2)
-	{
-		m_cps_a_regs[offset] = 0x90c0;
-		return;
-	}
-	if (offset == 0x04 / 2)
-	{
-		m_cps_a_regs[offset] = 0x9040;
-		return;
-	}
-	if (offset == 0x06 / 2)
-	{
-		m_cps_a_regs[offset] = 0x9080;
-		return;
-	}
-	if (offset == 0x0a / 2)
-	{
-		m_cps_a_regs[offset] = 0x9000;
-		return;
-	}
-
-	m_cps_a_regs[offset] = data;
-}
-
-
-
 /*************************************************** Game Macros *****************************************************/
 
 GAME( 1988, forgottn,    0,        forgottn,   forgottn, cps_state, init_cps1,     ROT0,   "Capcom", "Forgotten Worlds (World, newer)", MACHINE_SUPPORTS_SAVE )  // (c) Capcom U.S.A. but World "warning"
@@ -21852,7 +21908,7 @@ GAME( 1991, knights,     0,        cps1_10MHz, knights,  cps_state, init_cps1,  
 GAME( 1991, knightsu,    knights,  cps1_10MHz, knights,  cps_state, init_cps1,     ROT0,   "Capcom", "Knights of the Round (USA 911127)", MACHINE_SUPPORTS_SAVE )
 GAME( 1991, knightsj,    knights,  cps1_10MHz, knights,  cps_state, init_cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127, B-Board 91634B-2)", MACHINE_SUPPORTS_SAVE )
 GAME( 1991, knightsja,   knights,  cps1_10MHz, knights,  cps_state, init_cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127, B-Board 89625B-1)", MACHINE_SUPPORTS_SAVE )
-GAME( 1991, knightsb2,   knights,  cps1_10MHz, knights,  cps_state, init_cps1,     ROT0,   "Capcom", "Knights of the Round (bootleg, World 911127)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_SUPPORTS_SAVE ) // i.e. player selection screen problems
+GAME( 1991, knightsb2,   knights,  cps1_10MHz, knights,  cps_state, init_cps1,     ROT0,   "bootleg","Knights of the Round (bootleg, World 911127)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_SUPPORTS_SAVE ) // i.e. player selection screen problems
 GAME( 1992, sf2ce,       0,        cps1_12MHz, sf2,      cps_state, init_cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (World 920513)", MACHINE_SUPPORTS_SAVE )   // "ETC"
 GAME( 1992, sf2ceea,     sf2ce,    cps1_12MHz, sf2,      cps_state, init_cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (World 920313)", MACHINE_SUPPORTS_SAVE )   // "ETC"
 GAME( 1992, sf2ceec,     sf2ce,    cps1_12MHz, sf2,      cps_state, init_cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (World 920803)", MACHINE_SUPPORTS_SAVE )   // "ETC"
@@ -21892,13 +21948,13 @@ GAME( 1992, sf2ceuab8,   sf2ce,    sf2m10,     sf2hack,  cps_state, init_cps1,  
 GAME( 1992, sf2yyc,      sf2ce,    cps1_12MHz, sf2hack,  cps_state, init_sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (YYC, bootleg, set 1)", MACHINE_SUPPORTS_SAVE )              // 920313 - based on World version
 GAME( 1992, sf2koryu,    sf2ce,    cps1_12MHz, sf2hack,  cps_state, init_sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (Xiang Long, Chinese bootleg, set 1)", MACHINE_SUPPORTS_SAVE )       // 811102 !!! - based on World version
 GAME( 1992, sf2dongb,    sf2ce,    cps1_12MHz, sf2,      cps_state, init_sf2dongb, ROT0,   "bootleg", "Street Fighter II': Champion Edition (Dongfang Bubai protection, bootleg)", MACHINE_SUPPORTS_SAVE ) // 920313 - based on World version
-GAME( 1992, sf2ceupl,    sf2ce,    sf2m10,     sf2hack,  cps_state, init_cps1,     ROT0,   "bootleg (UPL)", "Street Fighter II': Champion Edition (Japan 920322, UPL bootleg?)", MACHINE_SUPPORTS_SAVE ) // 920322 - based on Japan version
+GAME( 1992, sf2ceupl,    sf2ce,    sf2m10,     sf2hack,  cps_state, init_cps1,     ROT0,   "bootleg (UPL?)", "Street Fighter II': Champion Edition (Japan 920322, UPL bootleg?)", MACHINE_SUPPORTS_SAVE ) // 920322 - based on Japan version
 GAME( 1992, sf2cems6a,   sf2ce,    sf2cems6,   sf2,      cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Mstreet-6, bootleg, set 1)", MACHINE_SUPPORTS_SAVE ) // 920313 USA
 GAME( 1992, sf2cems6b,   sf2ce,    sf2cems6,   sf2bhh,   cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Mstreet-6, bootleg, set 2)", MACHINE_SUPPORTS_SAVE ) // 920322 USA
 GAME( 1992, sf2cems6c,   sf2ce,    sf2cems6,   sf2bhh,   cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Mstreet-6, bootleg, set 3)", MACHINE_SUPPORTS_SAVE ) // 920322 USA
 GAME( 1992, sf2ceds6,    sf2ce,    sf2cems6,   sf2,      cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Dstreet-6, bootleg)", MACHINE_SUPPORTS_SAVE ) // 920313 USA
-GAME( 1992, sf2re,       sf2,      sf2m3,      sf2,      cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (RE, bootleg)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_SUPPORTS_SAVE )    // 920313 - based on USA version, glitch on title screen confirmed not to happen on PCB so MIG
-GAME( 1992, sf2mkot,     sf2,      cps1_10MHz, sf2hack,  cps_state, init_sf2hack,  ROT0,   "bootleg", "Street Fighter II': Magic KO Turbo!! - Nightmare Crack (set 1)", MACHINE_SUPPORTS_SAVE ) // 920313 - based on World version
+GAME( 1992, sf2re,       sf2ce,    sf2m3,      sf2,      cps_state, init_cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (RE, bootleg)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_SUPPORTS_SAVE )    // 920313 - based on USA version, glitch on title screen confirmed not to happen on PCB so MIG
+GAME( 1992, sf2mkot,     sf2ce,    cps1_10MHz, sf2hack,  cps_state, init_sf2hack,  ROT0,   "bootleg", "Street Fighter II': Magic KO Turbo!! - Nightmare Crack (set 1)", MACHINE_SUPPORTS_SAVE ) // 920313 - based on World version
 GAME( 1992, cworld2j,    0,        cps1_12MHz, cworld2j, cps_state, init_cps1,     ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611)", MACHINE_SUPPORTS_SAVE )
 GAME( 1992, cworld2ja,   cworld2j, cps1_12MHz, cworld2j, cps_state, init_cps1,     ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 90629B-3, no battery)", MACHINE_SUPPORTS_SAVE )
 GAME( 1992, cworld2jb,   cworld2j, cps1_12MHz, cworld2j, cps_state, init_cps1,     ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 91634B-2)", MACHINE_SUPPORTS_SAVE )
@@ -21929,7 +21985,7 @@ GAME( 1993, punisher,    0,        qsound,     punisher, cps_state, init_punishe
 GAME( 1993, punisheru,   punisher, qsound,     punisher, cps_state, init_punisher, ROT0,   "Capcom", "The Punisher (USA 930422)", MACHINE_SUPPORTS_SAVE )
 GAME( 1993, punisherh,   punisher, qsound,     punisher, cps_state, init_punisher, ROT0,   "Capcom", "The Punisher (Hispanic 930422)", MACHINE_SUPPORTS_SAVE )
 GAME( 1993, punisherj,   punisher, qsound,     punisher, cps_state, init_punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", MACHINE_SUPPORTS_SAVE )
-GAME( 1993, punisherbz,  punisher, wofhfh,     punisherbz, cps_state, init_cps1,   ROT0,   "bootleg", "Biaofeng Zhanjing (Chinese bootleg of The Punisher)", MACHINE_SUPPORTS_SAVE )  // (c) 2002, they ripped the sound from Final Fight!
+GAME( 2002, punisherbz,  punisher, wofhfh,     punisherbz, cps_state, init_cps1,   ROT0,   "bootleg", "Biaofeng Zhanjing (Chinese bootleg of The Punisher)", MACHINE_SUPPORTS_SAVE )  // (c) 2002, they ripped the sound from Final Fight!
 GAME( 1993, slammast,    0,        qsound,     slammast, cps_state, init_slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)", MACHINE_SUPPORTS_SAVE )    // "ETC"
 GAME( 1993, slammastu,   slammast, qsound,     slammast, cps_state, init_slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (USA 930713)", MACHINE_SUPPORTS_SAVE )
 GAME( 1993, mbomberj,    slammast, qsound,     slammast, cps_state, init_slammast, ROT0,   "Capcom", "Muscle Bomber: The Body Explosion (Japan 930713)", MACHINE_SUPPORTS_SAVE )
@@ -21944,7 +22000,7 @@ GAME( 1995, rockmanj,    megaman,  cps1_12MHz, rockmanj, cps_state, init_cps1,  
 GAME( 1999, pmonster,    0,        ganbare,    pmonster, cps_state, init_ganbare,  ROT0,   "Capcom", "Gamushara Battle! Puchi Monster (Japan 990519)", MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE ) // Needs hopper emulation
 GAME( 2000, ganbare,     0,        ganbare,    ganbare,  cps_state, init_ganbare,  ROT0,   "Capcom", "Ganbare! Marine Kun (Japan 2K0411)", MACHINE_SUPPORTS_SAVE )
 GAME( 1994, pokonyan,    0,        cps1_10MHz, pokonyan, cps_state, init_cps1,     ROT0,   "Capcom", "Pokonyan! Balloon (Japan 940322)", MACHINE_SUPPORTS_SAVE ) // 2002-10-24 was on the ROM labels, 940322 on the startup screen... take your pick
-GAME( 1996, mpumpkin,    0,        cps1_10MHz, pokonyan, cps_state, init_cps1,     ROT0,   "Capcom", "Hello Kitty Magical Pumpkin (Japan 960712)", MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE ) // needs 'wheel' emulation
+GAME( 1996, mpumpkin,    0,        cps1_10MHz, mpumpkin, cps_state, init_cps1,     ROT0,   "Capcom", "Magical Pumpkin: Puroland de Daibouken (Japan 960712)", MACHINE_SUPPORTS_SAVE )
 
 /* Games released on CPS-1 hardware by Mitchell */
 
@@ -21960,6 +22016,7 @@ GAME( 1995, pang3b5,     pang3,    pang3,      pang3,    cps_state, init_pang3, 
 /* CPS1 multi game bootleg */
 GAME( 20??, cps1mult,    0,        cps1_12MHz, sf2,      cps_state, init_cps1mult, ROT0,   "bootleg", "CPS1 Multi Game", MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE ) // needs game selection support via DIP switches
 
+/* Home 'CPS Changer' Unit */
 GAME( 1994, wofch,       0,        qsound,     wofch,    cps_state, init_wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)", MACHINE_SUPPORTS_SAVE )
 GAME( 1995, sfzch,       0,        cps1_12MHz, sfzch,    cps_state, init_cps1,     ROT0,   "Capcom", "Street Fighter Zero (CPS Changer, Japan 951020)", MACHINE_SUPPORTS_SAVE )
 // are these 2 legit sets, or did somebody region hack it?

@@ -46,13 +46,16 @@ brightness circuity present on pcb?
 #include "emu.h"
 #include "fcrash.h"
 
+#include "cpu/m68000/m68000.h"
 #include "cpu/pic16c5x/pic16c5x.h"
+#include "sound/okim6295.h"
 #include "machine/eepromser.h"
 #include "speaker.h"
 
 
 namespace {
 
+#define CPS1_ROWSCROLL_OFFS  (0x20/2)    /* base of row scroll offsets in other RAM */
 #define CODE_SIZE            0x400000
 
 
@@ -61,8 +64,7 @@ class cps1bl_pic_state : public cps1bl_no_brgt
 public:
 	cps1bl_pic_state(const machine_config &mconfig, device_type type, const char *tag) :
 		cps1bl_no_brgt(mconfig, type, tag),
-		m_pic(*this, "pic"),
-		m_audiorom_raw(*this, "audiorom_raw")
+		m_pic(*this, "pic")
 	{ }
 
 	void punipic(machine_config &config);
@@ -75,10 +77,6 @@ public:
 
 protected:
 	required_device<pic16c57_device> m_pic;
-
-	uint16_t qsound_pic_r(offs_t offset);
-
-	optional_region_ptr<uint8_t> m_audiorom_raw;
 
 	uint8_t m_pic_portb = 0;
 	uint8_t m_pic_portc = 0;
@@ -162,26 +160,6 @@ private:
 	void wofpic_map(address_map &map) ATTR_COLD;
 };
 
-/********************************************************************
-*
-*  Q Sound
-*  =======
-*
-********************************************************************/
-
-uint16_t cps1bl_pic_state::qsound_pic_r(offs_t offset)
-{
-	if (m_audiorom_raw != nullptr)
-	{
-		return m_audiorom_raw[offset] | 0xff00;
-	}
-	else
-	{
-		if (!machine().side_effects_disabled())
-			popmessage("%06x: read sound ROM byte %04x", m_maincpu->pc(), offset);
-		return 0;
-	}
-}
 
 void cps1bl_pic_state::dinopic_layer_w(offs_t offset, uint16_t data)
 {
@@ -702,7 +680,7 @@ void cps1bl_pic_state::slampic_map(address_map &map)
 	map(0x880000, 0x880001).nopw(); //.w(FUNC(cps1bl_pic_state::cps1_soundlatch_w));    /* Sound command */
 	map(0x900000, 0x92ffff).ram().w(FUNC(cps1bl_pic_state::cps1_gfxram_w)).share(m_gfxram);
 	map(0x980000, 0x98000d).w(FUNC(cps1bl_pic_state::slampic_layer_w));
-	map(0xf00000, 0xf0ffff).r(FUNC(cps1bl_pic_state::qsound_pic_r));          /* Slammasters protection */
+	map(0xf00000, 0xf0ffff).r(FUNC(cps1bl_pic_state::qsound_rom_r));          /* Slammasters protection */
 	map(0xf18000, 0xf19fff).ram();
 	map(0xf1c000, 0xf1c001).portr("IN2");            /* Player 3 controls (later games) */
 	map(0xf1c004, 0xf1c005).w(FUNC(cps1bl_pic_state::cpsq_coinctrl2_w));     /* Coin control2 (later games) */
@@ -1701,7 +1679,7 @@ ROM_START( slampic )
 	ROM_REGION( 0x80000, "oki", 0 ) /* OKI6295 samples */
 	ROM_LOAD( "18.bin", 0x00000, 0x80000, CRC(73a0c11c) SHA1(a66e1a964313e21c4436200d36c598dcb277cd34) )
 
-	ROM_REGION( 0x20000, "audiorom_raw", 0 ) // not in the dump, but needed for protection
+	ROM_REGION( 0x20000, "user1", 0 ) // not in the dump, but needed for protection
 	ROM_LOAD( "mb_qa.5k", 0x00000, 0x20000, BAD_DUMP CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 
 	/* pld devices:
