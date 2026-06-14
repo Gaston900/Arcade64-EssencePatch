@@ -1,4 +1,3 @@
-// license:BSD-3-Clause
 // For licensing and usage information, read docs/release/winui_license.txt
 // IPS 实现代码由 eziochiu 添加，IPS 管理器由醉猫(Drunk Cat)修复
 
