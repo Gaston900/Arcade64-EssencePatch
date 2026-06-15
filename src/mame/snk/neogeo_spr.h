@@ -2,6 +2,9 @@
 // copyright-holders:Bryan McPhail,Ernesto Corvi,Andrew Prime,Zsolt Vasvari
 // thanks-to:Fuzz
 
+#ifndef MAME_SNK_NEOGEO_SPR_H
+#define MAME_SNK_NEOGEO_SPR_H
+
 // todo, move these back, currently the sprite code needs some of the values tho
 #define NEOGEO_MASTER_CLOCK                     (24000000)
 #define NEOGEO_MAIN_CPU_CLOCK                   (NEOGEO_MASTER_CLOCK / 2)
@@ -20,7 +23,7 @@
 class neosprite_device : public device_t
 {
 public:
-	neosprite_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+	neosprite_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock = 0);
 	uint8_t      m_fixed_layer_bank_type = 0U;
 	uint8_t      m_fixed_layer_source = 0U;
 	uint16_t     get_videoram_data(  );
@@ -85,3 +88,5 @@ private:
 };
 
 DECLARE_DEVICE_TYPE(NEOGEO_SPRITE, neosprite_device)
+
+#endif // MAME_SNK_NEOGEO_SPR_H

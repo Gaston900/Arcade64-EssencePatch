@@ -638,7 +638,6 @@ void neogeo_state::neogeo_postload()
 
 void neogeo_state::machine_start()
 {
-	m_out_digit.resolve();
 	m_type = NEOGEO_MVS;
 
 	/* set the initial main CPU bank */
@@ -956,7 +955,7 @@ void neogeo_state::neogeo_base(machine_config &config)
 	/* 4096 colors * two banks * normal and shadow */
 	PALETTE(config, m_palette, palette_device::BLACK, 4096*2*2);
 
-	NEOGEO_SPRITE(config, m_sprgen, 0).set_screen(m_screen);
+	NEOGEO_SPRITE(config, m_sprgen).set_screen(m_screen);
 
 	/* audio hardware */
     SPEAKER(config, "speaker", 2).front();
@@ -979,7 +978,7 @@ void neogeo_state::neogeo_arcade(machine_config &config)
 	WATCHDOG_TIMER(config, "watchdog").set_time(attotime::from_ticks(3244030, NEOGEO_MASTER_CLOCK));
 	UPD4990A(config, m_upd4990a);
 	NVRAM(config, "saveram", nvram_device::DEFAULT_ALL_0);
-	NG_MEMCARD(config, m_memcard, 0);
+	NG_MEMCARD(config, m_memcard);
 }
 
 void neogeo_state::mvs(machine_config &config)
@@ -21653,6 +21652,23 @@ ROM_START( beast )
 	ROM_REGION( 0x100000, "sprites", 0 )
 	ROM_LOAD16_BYTE( "601.c1", 0x000000, 0x80000, CRC(e1974741) SHA1(175b09778875a18f12e7b34c53862ac8c93141c1) )
 	ROM_LOAD16_BYTE( "601.c2", 0x000001, 0x80000, CRC(9f5b9cf6) SHA1(857595fc93bfec069c8b1cf647ab9feedce56f1f) )
+ROM_END
+
+ROM_START( blueandr )
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "415.p1", 0x000000, 0x100000, CRC(32b764e1) SHA1(a796e263a82ca53af27bc9f7abf175f32359339f) )
+
+	NEO_SFIX_128K( "415.s1", CRC(0d0067f5) SHA1(ed77445e94d58ed83b27480c5e939ca2c0b6a90c) )
+
+	NEO_BIOS_AUDIO_256K( "415.m1", CRC(864a8cf8) SHA1(c05ead7507f55a802c615b6b2fb221be55d5b832) )
+
+	ROM_REGION( 0x1000000, "ymsnd:adpcma", 0 )
+	ROM_LOAD( "415.v1",  0x000000, 0x040000, CRC(7d5535dd) SHA1(96180a18b3fecfc9583a7ae36bd1aa47eafad07e) )
+	ROM_LOAD( "415.v2",  0x040000, 0xB80000, CRC(d6308621) SHA1(89bfb9396e553cd876497b524a5fc7c78dbb612d) )
+
+	ROM_REGION( 0x100000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "415.c1", 0x000000, 0x040000, CRC(c1554b81) SHA1(d88316730155a113b9b5d315c23210b143d76949) )
+	ROM_LOAD16_BYTE( "415.c2", 0x000001, 0x040000, CRC(83a9c206) SHA1(519f84e9cb60641f33082aa37f3d151964cb41d8) )
 ROM_END
 
 // 416 : Block Panic DX 250101 by Blastar
@@ -47999,6 +48015,7 @@ GAME( 2017, badapple,   neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_
 GAME( 2025, baddudesn,  neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "La Casa De Ruivo / Neo Byte Force", "Bad Dudes vs Dragonninja Burger Demo (HB)", MACHINE_SUPPORTS_SAVE )
 GAME( 2025, bbb2,       neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "Pixelheart", "Bang Bang Busters 2 - Demo (HB) ", MACHINE_SUPPORTS_SAVE )
 GAME( 2002, beast,      neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "Jeff Kurtz", "Shadow of the Beast Demo (HB)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_SUPPORTS_SAVE )
+GAME( 2026, blueandr,   neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "Kaiju Wasp", "Blue And Red - Fight The Robots! (HB, v1.5 NTSC)", MACHINE_SUPPORTS_SAVE )
 GAME( 2025, bpanicdx,   neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "Blastar", "Block Panic DX (HB)", MACHINE_SUPPORTS_SAVE )
 GAME( 2020, bonusstage, neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "Totologic", "Bonus Stage (HB)", MACHINE_SUPPORTS_SAVE )
 GAME( 2021, cabalng,    neogeo,   neogeo_neo304h,  neogeo, neogeo_state,   init_neogeo,   ROT0, "iq132", "Cabal - Neo Geo Conversion (HB)", MACHINE_SUPPORTS_SAVE )

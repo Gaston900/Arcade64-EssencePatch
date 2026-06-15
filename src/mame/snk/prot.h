@@ -6,8 +6,8 @@
 
 #include "banked_cart.h"
 
-#ifndef __NEOGEO_PROT__
-#define __NEOGEO_PROT__
+#ifndef __SNK_PROT__
+#define __SNK_PROT__
 
 DECLARE_DEVICE_TYPE(NGBOOTLEG_PROT, ngbootleg_prot_device)
 
@@ -389,4 +389,4 @@ protected:
 	virtual void device_reset() override ATTR_COLD;
 };
 
-#endif
+#endif //__SNK_PROT__

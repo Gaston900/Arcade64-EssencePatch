@@ -4,8 +4,8 @@
 
 #pragma once
 
-#ifndef __NEOGEO_BANKED_CART__
-#define __NEOGEO_BANKED_CART__
+#ifndef __SNK_BANKED_CART__
+#define __SNK_BANKED_CART__
 
 DECLARE_DEVICE_TYPE(NEOGEO_BANKED_CART, neogeo_banked_cart_device)
 
@@ -34,4 +34,4 @@ protected:
 	void postload();
 };
 
-#endif
+#endif //__SNK_BANKED_CART__

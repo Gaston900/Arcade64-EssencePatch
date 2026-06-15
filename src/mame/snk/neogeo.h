@@ -7,6 +7,8 @@
     Neo-Geo hardware
 
 *************************************************************************/
+#ifndef MAME_SNK_NEOGEO_H
+#define MAME_SNK_NEOGEO_H
 
 #include "emu.h"
 #include "bus/neogeo_ctrl/ctrl.h"
@@ -850,3 +852,5 @@ INPUT_PORTS_EXTERN(neogeo);
 
 #define NEO_MSLUG_FOREVER_BIOS_FIX_COIN_AUDIO_512K(name, hash) \
 	NEO_MSLUG_FOREVER_BIOS_FIX_COIN_AUDIO(0x80000, name, hash)
+
+#endif // MAME_SNK_NEOGEO_H

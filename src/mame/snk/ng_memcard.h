@@ -5,8 +5,8 @@
     Neo Geo Memory card functions
 
 *********************************************************************/
-#ifndef MAME_NEOGEO_NG_MEMCARD_H
-#define MAME_NEOGEO_NG_MEMCARD_H
+#ifndef MAME_SNK_NG_MEMCARD_H
+#define MAME_SNK_NG_MEMCARD_H
 
 #pragma once
 
@@ -17,7 +17,7 @@ class ng_memcard_device : public device_t, public device_memcard_image_interface
 {
 public:
 	// construction/destruction
-	ng_memcard_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+	ng_memcard_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock = 0);
 
 	// device_image_interface implementation
 	virtual bool is_reset_on_load() const noexcept override { return false; }
@@ -50,8 +50,8 @@ private:
 };
 
 
-// device type definition
+// device type declaration
 DECLARE_DEVICE_TYPE(NG_MEMCARD, ng_memcard_device)
 
 
-#endif // MAME_NEOGEO_NG_MEMCARD_H
+#endif // MAME_SNK_NG_MEMCARD_H

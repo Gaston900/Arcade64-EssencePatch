@@ -17,7 +17,6 @@
 
 // MAME headers
 #include "emu.h"
-#include "uiinput.h"
 #include "ui/uimain.h"
 
 // MAMEOS headers
@@ -1247,13 +1246,13 @@ LRESULT CALLBACK win_window_info::video_window_proc(HWND wnd, UINT message, WPAR
 				if (window->m_last_surrogate)
 				{
 					char32_t const uch = 0x10000 + ((ch & 0x03ff) | ((window->m_last_surrogate & 0x03ff) << 10));
-					window->machine().ui_input().push_char_event(window->target(), uch);
+					window->target()->push_char_event(uch);
 				}
 				window->m_last_surrogate = 0;
 			}
 			else
 			{
-				window->machine().ui_input().push_char_event(window->target(), char32_t(ch));
+				window->target()->push_char_event(char32_t(ch));
 				window->m_last_surrogate = 0;
 			}
 		}
@@ -1263,7 +1262,7 @@ LRESULT CALLBACK win_window_info::video_window_proc(HWND wnd, UINT message, WPAR
 		if (UNICODE_NOCHAR == wparam)
 			return TRUE;
 		else
-			window->machine().ui_input().push_char_event(window->target(), char32_t(wparam));
+			window->target()->push_char_event(char32_t(wparam));
 		break;
 
 	// legacy mouse events
@@ -1301,7 +1300,7 @@ LRESULT CALLBACK win_window_info::video_window_proc(HWND wnd, UINT message, WPAR
 			ScreenToClient(wnd, &where);
 			UINT ucNumLines = 3; // default
 			SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &ucNumLines, 0);
-			window->machine().ui_input().push_mouse_wheel_event(window->target(), where.x, where.y, GET_WHEEL_DELTA_WPARAM(wparam), ucNumLines);
+			window->target()->push_mouse_wheel_event(where.x, where.y, GET_WHEEL_DELTA_WPARAM(wparam), ucNumLines);
 		}
 		break;
 
@@ -1417,9 +1416,9 @@ LRESULT CALLBACK win_window_info::video_window_proc(HWND wnd, UINT message, WPAR
 			}
 
 			if ((wparam == WA_ACTIVE) || (wparam == WA_CLICKACTIVE))
-				window->machine().ui_input().push_window_focus_event(window->target());
+				window->target()->push_window_focus_event();
 			else if (wparam == WA_INACTIVE)
-				window->machine().ui_input().push_window_defocus_event(window->target());
+				window->target()->push_window_defocus_event();
 		}
 		return DefWindowProc(wnd, message, wparam, lparam);
 
@@ -2027,8 +2026,7 @@ void win_window_info::pointer_entered(WPARAM wparam, LPARAM lparam)
 		ScreenToClient(platform_window(), &where);
 		info->x = where.x;
 		info->y = where.y;
-		machine().ui_input().push_pointer_update(
-				target(),
+		target()->push_pointer_update(
 				convert_pointer_type(info->type),
 				info->index,
 				info->device,
@@ -2072,8 +2070,7 @@ void win_window_info::pointer_capture_changed(WPARAM wparam, LPARAM lparam)
 			info->clickcnt = -info->clickcnt;
 
 		// push to UI manager and dump pointer data
-		machine().ui_input().push_pointer_abort(
-				target(),
+		target()->push_pointer_abort(
 				convert_pointer_type(info->type),
 				info->index,
 				info->device,
@@ -2202,8 +2199,7 @@ void win_window_info::expire_pointer(std::vector<win_pointer_info>::iterator inf
 	// push to UI manager and dump pointer data
 	if (!canceled)
 	{
-		machine().ui_input().push_pointer_leave(
-				target(),
+		target()->push_pointer_leave(
 				convert_pointer_type(info->type),
 				info->index,
 				info->device,
@@ -2212,8 +2208,7 @@ void win_window_info::expire_pointer(std::vector<win_pointer_info>::iterator inf
 	}
 	else
 	{
-		machine().ui_input().push_pointer_abort(
-				target(),
+		target()->push_pointer_abort(
 				convert_pointer_type(info->type),
 				info->index,
 				info->device,
@@ -2257,8 +2252,7 @@ void win_window_info::update_pointer(win_pointer_info &info, POINT const &where,
 	info.buttons = buttons;
 	if (!canceled)
 	{
-		machine().ui_input().push_pointer_update(
-				target(),
+		target()->push_pointer_update(
 				convert_pointer_type(info.type),
 				info.index,
 				info.device,
@@ -2267,8 +2261,7 @@ void win_window_info::update_pointer(win_pointer_info &info, POINT const &where,
 	}
 	else
 	{
-		machine().ui_input().push_pointer_abort(
-				target(),
+		target()->push_pointer_abort(
 				convert_pointer_type(info.type),
 				info.index,
 				info.device,
@@ -2277,12 +2270,65 @@ void win_window_info::update_pointer(win_pointer_info &info, POINT const &where,
 	}
 }
 
-//======================= 缘来是你：支持 Win7 =========================>>>
 std::vector<win_window_info::win_pointer_info>::iterator win_window_info::map_pointer(WPARAM wparam)
 {
-    return m_active_pointers.end();
+	WORD const ptrid(GET_POINTERID_WPARAM(wparam));
+	auto found(std::lower_bound(m_active_pointers.begin(), m_active_pointers.end(), ptrid, &win_pointer_info::compare));
+	if ((m_active_pointers.end() != found) && (found->ptrid == ptrid))
+		return found;
+
+	if ((sizeof(m_next_pointer) * 8) <= m_next_pointer)
+	{
+		assert(~decltype(m_pointer_mask)(0) == m_pointer_mask);
+		osd_printf_warning("win_window_info: exceeded maximum number of active pointers\n");
+		return m_active_pointers.end();
+	}
+	assert(!BIT(m_pointer_mask, m_next_pointer));
+
+	POINTER_INFO info = { 0 };
+	//if (!GetPointerInfo(ptrid, &info))
+	// win7 support
+	if (!OSD_DYNAMIC_CALL(GetPointerInfo, ptrid, &info))
+		{
+		osd_printf_error("win_window_info: failed to get info for pointer ID %u\n", ptrid);
+		return m_active_pointers.end();
+	}
+
+	auto devpos(std::lower_bound(
+			m_ptrdev_map.begin(),
+			m_ptrdev_map.end(),
+			info.sourceDevice,
+			[] (std::pair<HANDLE, unsigned> const &mapping, HANDLE device)
+			{
+				return mapping.first < device;
+			}));
+
+	try
+	{
+		if ((m_ptrdev_map.end() == devpos) || (devpos->first != info.sourceDevice))
+		{
+			devpos = m_ptrdev_map.emplace(devpos, info.sourceDevice, m_next_ptrdev);
+			++m_next_ptrdev;
+		}
+
+		found = m_active_pointers.emplace(
+				found,
+				win_pointer_info(ptrid, info.pointerType, m_next_pointer, devpos->second));
+		m_pointer_mask |= decltype(m_pointer_mask)(1) << m_next_pointer;
+		do
+		{
+			++m_next_pointer;
+		}
+		while (((sizeof(m_next_pointer) * 8) > m_next_pointer) && BIT(m_pointer_mask, m_next_pointer));
+
+		return found;
+	}
+	catch (std::bad_alloc const &)
+	{
+		osd_printf_error("win_window_info: error allocating pointer data\n");
+		return m_active_pointers.end();
+	}
 }
-//===================================================================>>>
 
 std::vector<win_window_info::win_pointer_info>::iterator win_window_info::find_pointer(WPARAM wparam)
 {
