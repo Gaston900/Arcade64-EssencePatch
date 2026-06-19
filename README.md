@@ -34,8 +34,6 @@ It is already pre-configured, enforce aspect ratio is disabled, full screen mode
 
 The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM (By KAZE).
 
-Support was added to the "Drivers NeoGeo/CPS" [HBMAME](https://github.com/Robbbert/hbmame) (By Robert)
-
 NEOGEO, PGM, driver supports key combination settings (By KAZE)
 
 Support for the option to lock the game's frame rate to 60 (By KAZE)

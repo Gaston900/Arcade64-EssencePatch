@@ -243,7 +243,6 @@ public:
 
 	// Public For kf2k2ps2re
 	int m_use_cart_audio = 0;
-	uint8_t      m_card_bank = 0;
 	void gsc_map(address_map &map) ATTR_COLD;
 	virtual void machine_start() override ATTR_COLD;
 	required_device<cpu_device> m_maincpu;
@@ -251,7 +250,7 @@ public:
 private:
 	uint32_t mvs_open7z(std::string zip_name, std::string filename, uint8_t *region_name, uint32_t region_size);
 	void io_control_w(offs_t offset, uint8_t data);
-	uint16_t memcard_r(offs_t offset, uint16_t mem_mask = ~0);
+	uint16_t memcard_r(offs_t offset);
 	void memcard_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0);
 	void audio_command_w(uint8_t data);
 	uint8_t audio_command_r();
