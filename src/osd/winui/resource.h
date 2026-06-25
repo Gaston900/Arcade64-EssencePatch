@@ -200,7 +200,7 @@
 // 修改的 代码来源 (EKMAME)
 /*******************************************/
 #define IDB_KLIST						290
-#define IDI_FOLDER_FILE		    		291
+#define IDI_FP_FILE		        		291
 /*******************************************/
 #define IDI_HEADER_UP                   292
 #define IDI_HEADER_DOWN                 293

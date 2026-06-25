@@ -673,8 +673,12 @@ intptr_t CALLBACK AboutDialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 				ReleaseDC(hDlg, hdc);
 			}
 			float dpiScale = (float)currentDpi / 96.0f;
-			int imgWidth = (int)(461 * dpiScale);
+			int imgWidth = (int)(491 * dpiScale);
 			int imgHeight = (int)(136 * dpiScale);
+			/* Original image size. If this does not display correctly, please use the code below */
+			//int imgWidth = (int)(461 * dpiScale);
+			//int imgHeight = (int)(136 * dpiScale);
+
 			HBITMAP hBmp = (HBITMAP)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_SPLASH), IMAGE_BITMAP, imgWidth, imgHeight, LR_CREATEDIBSECTION);
 			SendMessage(GetDlgItem(hDlg, IDC_ABOUT), STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBmp);
 			// 自适应字体大小

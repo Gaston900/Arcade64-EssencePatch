@@ -73,7 +73,7 @@ extern const FOLDERDATA g_folderData[] =
 	{"All Games",       "allgames",          FOLDER_ALL,       IDI_FP_ALL,       0,              0,          0,          0, NULL,                       NULL,                    true },
 	{"Available",       "available",         FOLDER_AVAIL,     IDI_FP_AVAIL,     0,              FI_AVAIL,   0,          0, NULL,                       FilterAvailable,         true },
 	{"Unavailable",     "unavailable",       FOLDER_UNAVAIL,   IDI_FP_UNAVAIL,   0,              0,          FI_AVAIL,   0, NULL,                       FilterAvailable,         false },
-	{"Collection",	    "collection",		 FOLDER_FILE,	   IDI_FOLDER_FILE,	 0,			     0, 		 0,          0, CreateFILEFolders },
+	{"Collection",	    "collection",		 FOLDER_FILE,	   IDI_FP_FILE,	     0,			     0, 		 0,          0, CreateFILEFolders },
 	{"BIOS",            "bios",              FOLDER_BIOS,      IDI_FP_BIOS,      IDI_FC_BIOS,    0,          0,          1, CreateBIOSFolders,          DriverIsBios,            true },
 	{"Parents",         "originals",         FOLDER_PARENTS,   IDI_FP_PARENTS,   0,              FI_PARENTS, FI_CLONES,  0, NULL,                       DriverIsClone,           false },
 	{"Clones",          "clones",            FOLDER_CLONES,    IDI_FP_CLONES,    0,              FI_CLONES,  FI_PARENTS, 0, NULL,                       DriverIsClone,           true },
@@ -153,10 +153,11 @@ static const TREEICON treeIconNames[] =
 	{ IDI_FP_SAVESTATE,    "fp-savest" },
 	{ IDI_FP_SOUND,        "fp-sound" },
 	{ IDI_FP_SOURCE,       "fp-source" },
+
 // 修改的 代码来源 (加斯顿90)
 /**********************************************/
-    { IDI_FOLDER_FILE,	    "fl_file" },
-	{ IDI_FOLDER,           "fl_folder" },
+    { IDI_FP_FILE,	       "fl_file" },
+	{ IDI_FOLDER,          "fl_folder" },
 /**********************************************/											
 	{ IDI_FP_STEREO,       "fp-stereo" },
 	{ IDI_FP_TRACKBALL,    "fp-track" },
@@ -2071,7 +2072,7 @@ void CreateFILEFolders(int parent_index)
 	int jj;
 	int nGames = GetNumGames();
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-    LPTREEFOLDER lpCapcom, lpDataeast, lpIGS, lpKonami, lpNamco, lpNeoGeo, lpMidway, lpNintendo, lpSega, lpSeta, lpTaito, lpToaplan, lpMisc;
+    LPTREEFOLDER lpCapcom, lpDataeast, lpIGS, lpKonami, lpNamco, lpSNK, lpMidway, lpNintendo, lpSega, lpSeta, lpTaito, lpToaplan, lpMisc;
 
 	// create our two subfolders
     lpCapcom = NewFolder("Capcom", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
@@ -2079,7 +2080,7 @@ void CreateFILEFolders(int parent_index)
 	lpIGS = NewFolder("IGS", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
 	lpKonami = NewFolder("Konami", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
 	lpNamco = NewFolder("Namco", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
-	lpNeoGeo = NewFolder("NeoGeo", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
+	lpSNK = NewFolder("SNK", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
 	lpMidway = NewFolder("Midway", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
     lpNintendo = NewFolder("Nintendo", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
     lpSega = NewFolder("Sega", next_folder_id++, parent_index, IDI_FOLDER, GetFolderFlags(numFolders));
@@ -2093,7 +2094,7 @@ void CreateFILEFolders(int parent_index)
 	AddFolder(lpIGS);
 	AddFolder(lpKonami);
 	AddFolder(lpNamco);
-	AddFolder(lpNeoGeo);
+	AddFolder(lpSNK);
 	AddFolder(lpMidway);
 	AddFolder(lpNintendo);
 	AddFolder(lpSega);
@@ -2427,7 +2428,7 @@ void CreateFILEFolders(int parent_index)
         if (!strcmp("schick.cpp", s))                 AddGame(lpNamco, jj);
 	}
 
-	// NEOGEO
+	// lpSNK
 	for (jj = 0; jj < nGames; jj++)
 	{
 		const char *s = GetDriverFileName(jj);
@@ -2435,9 +2436,21 @@ void CreateFILEFolders(int parent_index)
 		if (s == NULL || s[0] == '\0')
 			continue;
 
-		if (!strcmp("midas.cpp", s))			      AddGame(lpNeoGeo, jj);
-		if (!strcmp("neogeo.cpp", s))			      AddGame(lpNeoGeo, jj);
-		if (!strcmp("neopcb.cpp", s))			      AddGame(lpNeoGeo, jj);
+		if (!strcmp("midas.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("neogeo.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("neopcb.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("bbusters.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("dmndrby.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("drderby.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("hng64.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("lasso.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("mainsnk.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("mechatt.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("miconkit.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("munchmo.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("prehisle.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("snk68.cpp", s))			      AddGame(lpSNK, jj);
+		if (!strcmp("snk6502.cpp", s))			      AddGame(lpSNK, jj);
 	}
 
 	// MIDWAY
