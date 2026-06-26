@@ -181,7 +181,7 @@ struct _play_options
 
 // 缘来是你
 //============= USE_CLIST ===============>>>
-#define TSVNAME "arcade.lst"
+#define TSVNAME "arcade64.lst"
 #define LINEBUF_SIZE  1024
 #define NUM_COLUMNS   3
 
@@ -7028,6 +7028,9 @@ static void ExportGameToXML(FILE* f, int game_index)
 static void ExportFullXML(int mode, HWND hWndList)
 {
     wchar_t wfilename[MAX_PATH] = L"mame.xml";
+    wchar_t szCurDir[MAX_PATH];
+    
+    GetCurrentDirectory(MAX_PATH, szCurDir);
     
     OPENFILENAME ofn = {0};
     ofn.lStructSize = sizeof(ofn);
@@ -7039,16 +7042,24 @@ static void ExportFullXML(int mode, HWND hWndList)
     ofn.Flags = OFN_OVERWRITEPROMPT;
     
     if (!GetSaveFileName(&ofn))
+    {
+        SetCurrentDirectory(szCurDir);
         return;
+    }
     
     char* utf8_filename = win_utf8_from_wstring(wfilename);
-    if (!utf8_filename) return;
+    if (!utf8_filename)
+    {
+        SetCurrentDirectory(szCurDir);
+        return;
+    }
     
     FILE* f = fopen(utf8_filename, "w");
     if (!f)
     {
         ErrorMessageBox("Unable to create file: %s", utf8_filename);
         free(utf8_filename);
+        SetCurrentDirectory(szCurDir);
         return;
     }
     
@@ -7119,6 +7130,8 @@ static void ExportFullXML(int mode, HWND hWndList)
     
     fprintf(f, "</datafile>\n");
     fclose(f);
+    
+    SetCurrentDirectory(szCurDir);
     
     char msg[256];
     snprintf(msg, sizeof(msg), "%d games have been exported to:\n%s", exported, utf8_filename);
