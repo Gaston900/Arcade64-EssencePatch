@@ -2225,7 +2225,6 @@ void CreateFILEFolders(int parent_index)
 		if (!strcmp("cabaret.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("dunhuang.cpp", s))		          AddGame(lpIGS, jj);
 		if (!strcmp("goldstar.cpp", s))			      AddGame(lpIGS, jj);
-		if (!strcmp("funtech.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("jackie.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("igspoker.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("igs009.cpp", s))			      AddGame(lpIGS, jj);
@@ -2234,15 +2233,15 @@ void CreateFILEFolders(int parent_index)
 		if (!strcmp("igs_fear.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("igs_m027.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("igs_m027_023vid.cpp", s))		  AddGame(lpIGS, jj);
-		if (!strcmp("igs_m027_link.cpp", s))		  AddGame(lpIGS, jj);
 		if (!strcmp("igs_m027xa.cpp", s))			  AddGame(lpIGS, jj);
-		if (!strcmp("igs_m036.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("iqblock.cpp", s))			      AddGame(lpIGS, jj);
 		if (!strcmp("lordgun.cpp", s))		          AddGame(lpIGS, jj);
 		if (!strcmp("pgm.cpp", s))			          AddGame(lpIGS, jj);
 		if (!strcmp("pgm2.cpp", s))			          AddGame(lpIGS, jj);
 		if (!strcmp("pgm3.cpp", s))		              AddGame(lpIGS, jj);
 		if (!strcmp("spoker.cpp", s))			      AddGame(lpIGS, jj);
+		if (!strcmp("5clown.cpp", s))			      AddGame(lpIGS, jj);
+		if (!strcmp("igs_m027_033vid.cpp", s))	      AddGame(lpIGS, jj);
 	}
 
 	// KONAMI
@@ -2501,6 +2500,7 @@ void CreateFILEFolders(int parent_index)
 			continue;
 
 		if (!strcmp("aleck64.cpp", s))			      AddGame(lpNintendo, jj);
+		if (!strcmp("blockfvr.cpp", s))			      AddGame(lpNintendo, jj);
 		if (!strcmp("cham24.cpp", s))			      AddGame(lpNintendo, jj);
 		if (!strcmp("cothello.cpp", s))			      AddGame(lpNintendo, jj);
 		if (!strcmp("dkong.cpp", s))			      AddGame(lpNintendo, jj);
