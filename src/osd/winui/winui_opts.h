@@ -101,7 +101,6 @@
 #define GAMELIST_INI_FILENAME 					"gamelist"
 #define DEFAULT_INI_FILENAME 					"mame"
 #define INTERNAL_UI_INI_FILENAME 				"ui"
-#define PLUGINS_INI_FILENAME 					"plugin"
 
 // 修改的 (Eziochiu)
 /********************************************************************/
@@ -246,7 +245,6 @@ void LoadFolderFlags(void);
 const char* GetFolderNameByID(UINT nID);
 void SaveInterface(void);
 void SaveInternalUI(void);
-void SavePlugins(void);
 void SaveGameDefaults(void);
 void SaveGameList(void);
 void ResetInterface(void);
