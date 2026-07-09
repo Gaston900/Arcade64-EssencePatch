@@ -1054,7 +1054,6 @@ void cheat_entry::menu_text(std::string &description, std::string &state, uint32
 		else
 		{
 			state = m_parameter->text();
-
 			flags = ui::menu::FLAG_LEFT_ARROW;
 			if (!m_parameter->is_maximum())
 				flags |= ui::menu::FLAG_RIGHT_ARROW;

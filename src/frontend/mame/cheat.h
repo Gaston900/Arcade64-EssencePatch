@@ -12,6 +12,7 @@
 #define MAME_FRONTEND_CHEAT_H
 
 #pragma once
+
 //========= JOSN字典 ========>>>
 #include <string>
 #include <unordered_map>

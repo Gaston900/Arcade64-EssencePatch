@@ -3413,6 +3413,8 @@ if BUSES["MSX_CTRL"] then
 	files {
 		MAME_DIR .. "src/devices/bus/msx/ctrl/ctrl.cpp",
 		MAME_DIR .. "src/devices/bus/msx/ctrl/ctrl.h",
+		MAME_DIR .. "src/devices/bus/msx/ctrl/dual_joyport.cpp",
+		MAME_DIR .. "src/devices/bus/msx/ctrl/dual_joyport.h",
 		MAME_DIR .. "src/devices/bus/msx/ctrl/hypershot.cpp",
 		MAME_DIR .. "src/devices/bus/msx/ctrl/hypershot.h",
 		MAME_DIR .. "src/devices/bus/msx/ctrl/joystick.cpp",
@@ -6440,6 +6442,26 @@ end
 
 ---------------------------------------------------
 --
+--@src/devices/bus/xerox820/dbslot.h,BUSES["XEROX820"] = true
+--@src/devices/bus/xerox820/copro.h,BUSES["XEROX820"] = true
+---------------------------------------------------
+
+if BUSES["XEROX820"] then
+	files {
+		MAME_DIR .. "src/devices/bus/xerox820/dbslot.cpp",
+		MAME_DIR .. "src/devices/bus/xerox820/dbslot.h",
+		MAME_DIR .. "src/devices/bus/xerox820/fdc.cpp",
+		MAME_DIR .. "src/devices/bus/xerox820/fdc.h",
+		MAME_DIR .. "src/devices/bus/xerox820/sasi.cpp",
+		MAME_DIR .. "src/devices/bus/xerox820/sasi.h",
+		MAME_DIR .. "src/devices/bus/xerox820/copro.cpp",
+		MAME_DIR .. "src/devices/bus/xerox820/copro.h",
+	}
+end
+
+
+---------------------------------------------------
+--
 --@src/devices/bus/z29_kbd/keyboard.h,BUSES["Z29_KBD"] = true
 ---------------------------------------------------
 
@@ -6470,5 +6492,26 @@ if BUSES["Z88"] then
 		MAME_DIR .. "src/devices/bus/z88/ram.h",
 		MAME_DIR .. "src/devices/bus/z88/rom.cpp",
 		MAME_DIR .. "src/devices/bus/z88/rom.h",
+	}
+end
+
+
+---------------------------------------------------
+--
+--@src/devices/bus/zbi/zbi.h,BUSES["ZBI"] = true
+---------------------------------------------------
+
+if (BUSES["ZBI"]~=null) then
+	files {
+		MAME_DIR .. "src/devices/bus/zbi/zbi.cpp",
+		MAME_DIR .. "src/devices/bus/zbi/zbi.h",
+		MAME_DIR .. "src/devices/bus/zbi/zbi_cards.cpp",
+		MAME_DIR .. "src/devices/bus/zbi/zbi_cards.h",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_cpu.cpp",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_cpu.h",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_ram.cpp",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_ram.h",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_smdc.cpp",
+		MAME_DIR .. "src/devices/bus/zbi/s8k_smdc.h",
 	}
 end
