@@ -11440,7 +11440,7 @@ ROM_START( kof2k4se )
 
 	NEO_SFIX_128K( "k2k4s-s1.bin", CRC(a3c9b2d8) SHA1(1472d2cbd7bb73e84824ecf773924007e6117e77) )
 
-	NEO_BIOS_AUDIO_128K( "5008-m1.bin", CRC(5a47d9ad) SHA1(0197737934653acc6c97221660d789e9914f3578) )
+	NEO_BIOS_AUDIO_128K( "k2k4s-m1.bin", CRC(5a47d9ad) SHA1(0197737934653acc6c97221660d789e9914f3578) )
 
 	ROM_REGION( 0x1000000, "cslot1:ymsnd:adpcma", 0 )
 	ROM_LOAD( "k2k4s-v2.bin", 0x000000, 0x800000, CRC(e4ddfb3f) SHA1(eb8220ab01c16cf9244b7f3f9912bec0db561b85) )
@@ -12498,10 +12498,10 @@ GAME( 1994, gururin,    neogeo,   neo288h,   neogeo,    mvs_led_state, empty_ini
 GAME( 1997, miexchng,   neogeo,   neo304h,   neogeo,    mvs_led_state, empty_init, ROT0, "Face", "Money Puzzle Exchanger / Money Idol Exchanger", MACHINE_SUPPORTS_SAVE )
 GAME( 1997, dragonsh,   neogeo,   neobase,   neogeo,    mvs_led_state, empty_init, ROT0, "Face", "Dragon's Heaven (development board)", MACHINE_IS_INCOMPLETE | MACHINE_NO_SOUND | MACHINE_SUPPORTS_SAVE ) // same ID code as Voltage Fighter Gowkaizer, developed by ex-Technos staff
 
-/* Hudson Soft */
+// Hudson Soft
 GAME( 1994, panicbom,   neogeo,   neo304h,   neogeo,    mvs_led_state, empty_init, ROT0, "Eighting / Hudson", "Panic Bomber", MACHINE_SUPPORTS_SAVE )
-GAME( 1995, kabukikl,   neogeo,   neobase,   neogeo,    mvs_led_state, empty_init, ROT0, "Hudson", "Far East of Eden - Kabuki Klash / Tengai Makyou - Shin Den", MACHINE_SUPPORTS_SAVE )
-GAME( 1997, neobombe,   neogeo,   neo304h,   neogeo,    mvs_led_state, empty_init, ROT0, "Hudson", "Neo Bomberman", MACHINE_SUPPORTS_SAVE )
+GAME( 1995, kabukikl,   neogeo,   neobase,   neogeo,    mvs_led_state, empty_init, ROT0, "Hudson Soft", "Far East of Eden - Kabuki Klash / Tengai Makyou - Shin Den", MACHINE_SUPPORTS_SAVE )
+GAME( 1997, neobombe,   neogeo,   neo304h,   neogeo,    mvs_led_state, empty_init, ROT0, "Hudson Soft", "Neo Bomberman", MACHINE_SUPPORTS_SAVE )
 
 /* Monolith Corp. */
 GAME( 1990, minasan,    neogeo,   neogeo_mj, neogeo_mj, mvs_led_state, empty_init, ROT0, "Monolith Corp.", "Minasan no Okagesamadesu! Dai Sugoroku Taikai (MOM-001 ~ MOH-001)", MACHINE_SUPPORTS_SAVE )

@@ -223,6 +223,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_UI_MOUSE,                                   "1",         core_options::option_type::BOOLEAN,    "display UI mouse cursor" },
 	{ OPTION_LANGUAGE ";lang",                           "",          core_options::option_type::STRING,     "set UI display language" },
 	{ OPTION_NVRAM_SAVE ";nvwrite",                      "1",         core_options::option_type::BOOLEAN,    "save NVRAM data on exit" },
+	{ OPTION_RTC_TIME,                                   nullptr,     core_options::option_type::STRING,     "start emulation with time" },
 
 // 修改的 代码来源 (缘来是你)
 /*******************************************************************************************************************************************************************/
