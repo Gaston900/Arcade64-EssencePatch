@@ -3,7 +3,7 @@ What is Arcade64 Essence Patch?
 
 This is a version that was developed to include unofficial support for the [ARCADE64](https://arcade.mameworld.info/) emulator that has not yet been included or recognized to date, which does not allow the incorporation of corrections, new mechanisms and optimization for the system.
 
-I am only supporting the operating systems 64x bits, Windows 7, Windows 8, Windows 10 and Windows 11.
+I am only supporting the operating systems 64x bits, Windows 10 and Windows 11.
 
 What has been optimized in this version?
 ---------------------------------------
