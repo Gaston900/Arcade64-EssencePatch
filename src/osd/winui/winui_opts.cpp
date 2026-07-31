@@ -91,10 +91,10 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_ENABLE_INDENT,				"1",        core_options::option_type::BOOLEAN, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_ENABLE_FASTAUDIT,			"0",        core_options::option_type::BOOLEAN, nullptr },
 	{ MUIOPTION_ENABLE_SEVENZIP,			"0",        core_options::option_type::BOOLEAN, nullptr },
-	{ MUIOPTION_STRETCH_SCREENSHOT_LARGER,	"1",        core_options::option_type::BOOLEAN, nullptr },
+	{ MUIOPTION_STRETCH_SCREENSHOT_LARGER,	"1",        core_options::option_type::BOOLEAN, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_CYCLE_SCREENSHOT,			"0",        core_options::option_type::INTEGER, nullptr },
-	{ MUIOPTION_SCREENSHOT_BORDER_SIZE,		"2",        core_options::option_type::INTEGER, nullptr },
-	{ MUIOPTION_SCREENSHOT_BORDER_COLOR,	"183,91,0", core_options::option_type::INTEGER, nullptr },
+	{ MUIOPTION_SCREENSHOT_BORDER_SIZE,		"2",        core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
+	{ MUIOPTION_SCREENSHOT_BORDER_COLOR,	"183,91,0", core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 
 	{ nullptr,								nullptr,       core_options::option_type::HEADER, "SEARCH PATH OPTIONS" },
 	{ MUIOPTION_ARTWORK_DIRECTORY,			"artpreview", core_options::option_type::STRING, nullptr },
