@@ -55,21 +55,21 @@ const options_entry ui_options::s_option_entries[] =
 	{ OPTION_INFOS_SIZE "(0.20-1.00)",      "0.75",             option_type::FLOAT,       "UI right panel infos text size (0.20 - 1.00)" },
 	{ OPTION_FONT_ROWS "(25-40)",           "30",               option_type::INTEGER,     "UI font lines per screen (25 - 40)" },
 	// MAMEFX colours changed, Mamesick 2016-08-31
-	{ OPTION_UI_BORDER_COLOR,               "ff000000",         option_type::STRING,      "UI border color (ARGB)" },
-	{ OPTION_UI_BACKGROUND_COLOR,           "efefefef",         option_type::STRING,      "UI background color (ARGB)" },
-	{ OPTION_UI_CLONE_COLOR,                "ff7f7f7f",         option_type::STRING,      "UI clone color (ARGB)" },
+	{ OPTION_UI_BORDER_COLOR,               "ffb41010",         option_type::STRING,      "UI border color (ARGB)" }, // 修改的 (加斯顿90)
+	{ OPTION_UI_BACKGROUND_COLOR,           "ef161616",         option_type::STRING,      "UI background color (ARGB)" }, // 修改的 (加斯顿90)
+	{ OPTION_UI_CLONE_COLOR,                "ffc6c6c6",         option_type::STRING,      "UI clone color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_DIPSW_COLOR,                "ff7f7f7f",         option_type::STRING,      "UI dipswitch color (ARGB)" },
-	{ OPTION_UI_GFXVIEWER_BG_COLOR,         "ef101030",         option_type::STRING,      "UI gfx viewer color (ARGB)" },
+	{ OPTION_UI_GFXVIEWER_BG_COLOR,         "ef000000",         option_type::STRING,      "UI gfx viewer color (ARGB)" },
 	{ OPTION_UI_MOUSEDOWN_BG_COLOR,         "ef00a2e8",         option_type::STRING,      "UI mouse down bg color (ARGB)" },
 	{ OPTION_UI_MOUSEDOWN_COLOR,            "fffff200",         option_type::STRING,      "UI mouse down color (ARGB)" },
 	{ OPTION_UI_MOUSEOVER_BG_COLOR,         "ef00a2e8",         option_type::STRING,      "UI mouse over bg color (ARGB)" },
 	{ OPTION_UI_MOUSEOVER_COLOR,            "fffff200",         option_type::STRING,      "UI mouse over color (ARGB)" },
 	{ OPTION_UI_SELECTED_BG_COLOR,          "ef3f48cc",         option_type::STRING,      "UI selected bg color (ARGB)" },
 	{ OPTION_UI_SELECTED_COLOR,             "fffff200",         option_type::STRING,      "UI selected color (ARGB)" },
-	{ OPTION_UI_SLIDER_COLOR,               "ef22b14c",         option_type::STRING,      "UI slider color (ARGB)" },
-	{ OPTION_UI_SUBITEM_COLOR,              "ef3f48cc",         option_type::STRING,      "UI subitem color (ARGB)" },
+	{ OPTION_UI_SLIDER_COLOR,               "efffffff",         option_type::STRING,      "UI slider color (ARGB)" }, // 修改的 (加斯顿90)
+	{ OPTION_UI_SUBITEM_COLOR,              "efffffff",         option_type::STRING,      "UI subitem color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_TEXT_BG_COLOR,              "efefefef",         option_type::STRING,      "UI text bg color (ARGB)" },
-	{ OPTION_UI_TEXT_COLOR,                 "ff000000",         option_type::STRING,      "UI text color (ARGB)" },
+	{ OPTION_UI_TEXT_COLOR,                 "ffffffff",         option_type::STRING,      "UI text color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_UNAVAILABLE_COLOR,          "ff7f7f7f",         option_type::STRING,      "UI unavailable color (ARGB)" },
 
 	// system/software selection menu options
