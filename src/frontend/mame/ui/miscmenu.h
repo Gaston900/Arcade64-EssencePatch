@@ -178,8 +178,7 @@ protected:
 	virtual bool handle(event const *ev) override;
 };
 
-// 修改的 代码来源 (EKMAME)
-/****************************************************************************/
+//============================ EKMAME ================================>>>
 //-------------------------------------------------
 //  Autofire menu
 //-------------------------------------------------
@@ -215,7 +214,20 @@ public:
 	virtual void populate() override;
 	virtual bool handle(event const *ev) override;
 };
-/****************************************************************************/
+
+class menu_scale_effect : public menu 
+{
+public:
+	menu_scale_effect(mame_ui_manager &mui, render_target &target);
+	virtual ~menu_scale_effect() override;
+
+private:
+	virtual void populate() override;
+	virtual bool handle(event const *ev) override;
+
+	virtual void custom_render(uint32_t flags, void *selectedref, float top, float bottom, float x1, float y1, float x2, float y2) override;
+};
+//====================================================================>>>
 
 } // namespace ui
 

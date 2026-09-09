@@ -76,6 +76,9 @@ enum : unsigned {
 	AUDIO_EFFECTS,
 	SLIDERS,
 	VIDEO_TARGETS,
+//======= USE_SCALE_EFFECTS =======>>>
+	SCALE_EFFECT,
+//=================================>>>
 	CROSSHAIR,
 	CHEAT,
 	PLUGINS,
@@ -197,6 +200,10 @@ void menu_main::populate()
 
 	item_append(_("menu-main", "Video Options"), 0, (void *)VIDEO_TARGETS);
 
+//==================== USE_SCALE_EFFECTS ========================>>>
+	item_append(_("menu-main", "Image Enhancement"), 0, (void *)SCALE_EFFECT);
+//===============================================================>>>
+
 	if (machine().crosshair().get_usage())
 		item_append(_("menu-main", "Crosshair Options"), 0, (void *)CROSSHAIR);
 
@@ -213,22 +220,21 @@ void menu_main::populate()
 	}
 
 // MAMEFX items commented out, Mamesick 2016-08-31
+	item_append(menu_item_type::SEPARATOR);
 
 // 修改的 代码来源 (加斯顿90)
 /***************************************************************************************************************/
-	item_append(menu_item_type::SEPARATOR);
-
-	if (!mame_machine_manager::instance()->favorite().is_favorite(machine()))
-		item_append(_("menu-main", "Add To Favorites"), 0, (void *)FAVORITE);
-	else
-		item_append(_("menu-main", "Remove From Favorites"), 0, (void *)FAVORITE);
+//	if (!mame_machine_manager::instance()->favorite().is_favorite(machine()))
+//		item_append(_("menu-main", "Add To Favorites"), 0, (void *)FAVORITE);
+//	else
+//		item_append(_("menu-main", "Remove From Favorites"), 0, (void *)FAVORITE);
 
 //	item_append(menu_item_type::SEPARATOR);
 
 //	item_append(_("Quit from Machine"), "", 0, (void *)QUIT_GAME);
 //	item_append(string_format(_("menu-main", "About %1$s"), emulator_info::get_appname()), 0, (void *)ABOUT);
 
-	item_append(menu_item_type::SEPARATOR);
+//	item_append(menu_item_type::SEPARATOR);
 
     item_append(_("menu-main", "Quit From System"), 0, (void *)QUIT_GAME);
 
@@ -239,7 +245,8 @@ void menu_main::populate()
 	else
 	{
 		item_append(_("menu-main", "Select New System"), 0, (void *)SELECT_GAME);
-		item_append(_("menu-main", "Close Menu"), 0, (void *)DISMISS);
+	    item_append(menu_item_type::SEPARATOR);
+		item_append(_("menu-main", "Return to Machine"), 0, (void *)DISMISS);
 	}
 /***************************************************************************************************************/
 }
@@ -338,6 +345,12 @@ bool menu_main::handle(event const *ev)
 		case VIDEO_TARGETS:
 			menu::stack_push<menu_video_targets>(ui(), target());
 			break;
+
+//==================== USE_SCALE_EFFECTS ========================>>>
+		case SCALE_EFFECT:
+			menu::stack_push<menu_scale_effect>(ui(), target());
+			break;
+//===============================================================>>>
 
 		case CROSSHAIR:
 			menu::stack_push<menu_crosshair>(ui(), target());

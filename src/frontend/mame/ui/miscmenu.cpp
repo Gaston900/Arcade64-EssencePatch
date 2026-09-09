@@ -7,9 +7,18 @@
     Internal MAME menus for the user interface.
 
 *********************************************************************/
+//===== USE_SCALE_EFFECTS =====>>>
+#include <windows.h>
+#include <mmsystem.h>
+#undef interface
+//=============================>>>
 
 #include "emu.h"
 #include "ui/miscmenu.h"
+
+//===== USE_SCALE_EFFECTS =====>>>
+#include "screen.h"
+//=============================>>>
 
 #include "ui/inifile.h"
 #include "ui/selector.h"
@@ -34,16 +43,24 @@
 
 #include "path.h"
 
+//======= USE_SCALE_EFFECTS =======>>>
+#include "scale/osdscale.h"
+//=================================>>>
+
 //============ 缘来是你 ============>>>			
 #include <vector>
 //=================================>>>
 
 #include <algorithm>
 #include <cstring>
+
 #include <fstream>
 #include <iterator>
 #include <locale>
 
+//======= EKMAME =======>>>
+#include "rendfont.h"
+//======================>>>
 
 namespace ui {
 
@@ -775,7 +792,14 @@ void menu_autofire::populate()
 					case 1:	subtext.assign("On");	break;
 					case 2:	subtext.assign("Toggle");	break;
 				}
-        item_append(btn.name, subtext, FLAG_LEFT_ARROW | FLAG_RIGHT_ARROW, (void *)(btn.field));
+
+//========================== EKMAME ==============================>>>
+        char button_name_buf[1024];
+        std::snprintf(button_name_buf, sizeof(button_name_buf), "%s", btn.name.c_str());
+        convert_command_glyphs(button_name_buf, std::size(button_name_buf));
+
+        item_append(button_name_buf, subtext, FLAG_LEFT_ARROW | FLAG_RIGHT_ARROW, (void *)(btn.field));
+//================================================================>>>
 	}
 
 	/* add autofire delay items */
@@ -934,7 +958,15 @@ void menu_custom_setting::populate()
 					case 1:	subtext.assign("On");	break;
 					case 2:	subtext.assign("Toggle");	break;
 				}
-        item_append(btn.name, subtext, FLAG_LEFT_ARROW | FLAG_RIGHT_ARROW, (void *)(btn.field));
+
+//========================== EKMAME ==============================>>>
+        char custom_name_buf[1024];
+        std::snprintf(custom_name_buf, sizeof(custom_name_buf), "%s", btn.name.c_str());
+        convert_command_glyphs(custom_name_buf, std::size(custom_name_buf));
+
+        item_append(custom_name_buf, subtext, FLAG_LEFT_ARROW | FLAG_RIGHT_ARROW, (void *)(btn.field));
+//================================================================>>>
+
 	}
 
 	/* add autofire delay items */
@@ -1059,8 +1091,14 @@ void menu_custom_button::populate()
 				}
 				if (subtext.empty())
 					subtext.assign(" ");
-				item_append(name, subtext, 0, (void *)&machine().ioport().m_custom_button[player][type]);
 
+//========================== EKMAME ==============================>>>
+				char custom_btn_buf[1024];
+				std::snprintf(custom_btn_buf, sizeof(custom_btn_buf), "%s", name.c_str());
+				convert_command_glyphs(custom_btn_buf, std::size(custom_btn_buf));
+
+				item_append(custom_btn_buf, subtext, 0, (void *)&machine().ioport().m_custom_button[player][type]);
+//================================================================>>>
 				menu_items++;
 			}
 		}
@@ -1438,5 +1476,90 @@ void menu_plugins_configure::populate()
 		item_append(_("menu-plugins", "No plugins found"), FLAG_DISABLE, nullptr);
 	item_append(menu_item_type::SEPARATOR);
 }
+
+//======================== USE_SCALE_EFFECTS ============================>>>
+#define SCALE_ITEM_NONE 0
+/*-------------------------------------------------
+	menu_scale_effect - handle the scale effect
+	settings menu
+-------------------------------------------------*/
+
+// 1. Constructor moderno utilizando render_target obligatoriamente
+menu_scale_effect::menu_scale_effect(mame_ui_manager &mui, render_target &target) 
+	: menu(mui, target)
+{
+}
+
+menu_scale_effect::~menu_scale_effect()
+{
+}
+
+void menu_scale_effect::populate()
+{
+	int scaler;
+	
+	item_append(_("None"), "", 0, (void *)(uintptr_t)SCALE_ITEM_NONE);
+
+	for (scaler = 1; ; scaler++)
+	{
+		const char *desc = scale_desc(scaler);
+		if (desc == nullptr)
+			break;
+
+		item_append(desc, "", 0, (void *)(uintptr_t)(SCALE_ITEM_NONE + scaler));
+	}
+	set_custom_space(0.0f, ui().get_line_height(target()) * 4.0f);
+}
+
+void menu_scale_effect::custom_render(uint32_t flags, void *selectedref, float top, float bottom, float x1, float y1, float x2, float y2)
+{
+
+	if (selected_index() == 0)
+	{
+		const char *aviso_text = _("Press The P key To Clean Filter");
+
+		float posicion_y_cartel = top - ui().get_line_height(target()) * 1.0f - ui().box_tb_border() * 2.0f;
+
+		ui().draw_text_box(
+			target(), 
+			aviso_text, 
+			ui::text_layout::text_justify::CENTER, 
+			0.5f, 
+			posicion_y_cartel, 
+			ui().colors().background_color()
+		);
+	}
+}
+
+bool menu_scale_effect::handle(event const *ev)
+{
+	if (ev && ev->iptkey == IPT_UI_SELECT && ev->itemref != nullptr)
+	{
+		uintptr_t selected_effect = uintptr_t(ev->itemref);
+		
+		if (selected_effect >= SCALE_ITEM_NONE)
+		{
+			screen_device *screen = screen_device_enumerator(machine().root_device()).first();
+			if (screen != nullptr)
+			{
+				screen->video_exit_scale_effect();
+				scale_decode(scale_name(selected_effect - SCALE_ITEM_NONE));
+				screen->video_init_scale_effect();
+
+				machine().video().frame_update(false);
+				
+				osd_printf_verbose("scale effect: %s\n", scale_name(selected_effect - SCALE_ITEM_NONE));
+				
+				reset(reset_options::REMEMBER_REF);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+#undef SCALE_ITEM_NONE
+//=======================================================================>>>
 
 } // namespace ui

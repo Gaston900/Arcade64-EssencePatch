@@ -25,6 +25,11 @@
 #include "ui/systemlist.h"
 #include "ui/viewgfx.h"
 
+//========= EKMAME =========>>>
+#include "ui/miscmenu.h"
+#include "ui/cheatopt.h"
+//==========================>>>
+
 #include "imagedev/cassette.h"
 #include "machine/laserdsc.h"
 #include "video/vector.h"
@@ -52,6 +57,15 @@
 #include <functional>
 #include <type_traits>
 
+//=================== EKMAME ==================>>>
+struct scale_effect_t {
+	int effect;
+	int xsize;
+	int ysize;
+};
+extern scale_effect_t scale_effect;
+extern void scale_decode(const char *name);
+//=============================================>>>
 
 /***************************************************************************
     LOCAL VARIABLES
@@ -1242,20 +1256,37 @@ void mame_ui_manager::draw_text_full(
 //  message with a box around it
 //-------------------------------------------------
 
+// 修改的 代码来源 (加斯顿90)
+//============================================================================================================>>>
 void mame_ui_manager::draw_text_box(render_target &target, std::string_view text, ui::text_layout::text_justify justify, float xpos, float ypos, rgb_t backcolor)
 {
-	// cap the maximum width
 	float maximum_width = 1.0F - (box_lr_border() * machine().render().ui_aspect(target) * 2.0F);
 
-	// create a layout
 	ui::text_layout layout = create_layout(target, maximum_width, justify);
-
-	// add text to it
 	layout.add_text(text);
 
-	// and draw the result
-	draw_text_box(target, layout, xpos, ypos, backcolor);
+	auto const lrborder = box_lr_border() * machine().render().ui_aspect(target);
+	auto const actual_width = layout.actual_width();
+	auto const actual_height = layout.actual_height();
+	auto const x = std::clamp(xpos - actual_width / 2, lrborder, 1.0F - actual_width - lrborder);
+	auto const y = std::clamp(ypos - actual_height / 2, box_tb_border(), 1.0F - actual_height - box_tb_border());
+
+	draw_outlined_box(
+			*target.ui_container(),
+			x - lrborder, y - box_tb_border(),
+			x + actual_width + lrborder, y + actual_height + box_tb_border(),
+			backcolor);
+
+	draw_text_full(
+			*target.ui_container(),
+			text,
+			x, y, actual_width,
+			justify, ui::text_layout::word_wrapping::WORD,
+			mame_ui_manager::NORMAL, rgb_t(255, 255, 255, 255), backcolor,
+			nullptr, nullptr,
+			get_line_height(target));
 }
+//============================================================================================================>>>
 
 
 //-------------------------------------------------
@@ -1879,6 +1910,43 @@ uint32_t mame_ui_manager::handler_ingame()
 	// handle a toggle cheats request
 	if (inp.pressed(IPT_UI_TOGGLE_CHEAT))
 		mame_machine_manager::instance()->cheat().set_enable(!mame_machine_manager::instance()->cheat().enabled(), true);
+
+//==================== EKMAME ========================>>>
+	if (inp.pressed(IPT_UI_TOGGLE_CHEAT_CONFIG))
+	{
+		m_ui_target = &current_ui_target();
+		if (!machine().paused() && options().menu_pause())
+		{
+			machine().pause();
+			m_paused_for_menu = true;
+		}
+
+		ui::menu::stack_reset(*this);
+		activate_menu();
+		ui::menu::stack_push<ui::menu_cheat>(*this, *m_ui_target);
+
+		return 0;
+	}
+
+	if (inp.pressed(IPT_UI_CLEAR_FILTER))
+	{
+		screen_device *screen = screen_device_enumerator(machine().root_device()).first();
+		if (screen != nullptr)
+		{
+			screen->video_exit_scale_effect();
+			
+			scale_effect.effect = 0;
+			scale_effect.xsize = 1;
+			scale_effect.ysize = 1;
+			
+			screen->video_init_scale_effect();
+			machine().video().frame_update(true);
+			popup_time(2, "%s", "Image Enhancement: NONE (Pixel-Art Restored)");
+			return 0;
+		}
+	}
+
+//====================================================>>>
 
 	// toggle MNG recording
 	if (inp.pressed(IPT_UI_RECORD_MNG))

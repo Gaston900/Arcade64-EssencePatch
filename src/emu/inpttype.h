@@ -321,6 +321,11 @@ enum ioport_type : osd::u32
 		IPT_UI_EXPORT,
 		IPT_UI_AUDIT,
 
+//========= EKMAME =========>>>
+        IPT_UI_CLEAR_FILTER,
+		IPT_UI_TOGGLE_CHEAT_CONFIG,
+//==========================>>>
+
 		// additional OSD-specified UI port types (up to 16)
 		IPT_OSD_1,
 		IPT_OSD_2,

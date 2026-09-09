@@ -108,6 +108,10 @@ b) Exit the dialog.
 static ULONG_PTR g_gdiplusTokenProp = 0;
 //=======================================>>>
 
+//======= USE_SCALE_EFFECTS =======>>>
+#include "../scale/osdscale.h"
+//=================================>>>
+
 /**************************************************************
  * Local function prototypes
  **************************************************************/
@@ -142,6 +146,10 @@ static HBITMAP LoadImageFromFile(const wchar_t* filepath, int maxWidth, int maxH
 static void OnGlobalTreeSelChanged(HWND hDlg, HTREEITEM hItem);
 static void InitializeGlobalIPSTree(HWND hDlg);
 //==========================================================>>>
+
+//==================== USE_SCALE_EFFECTS ========================>>>
+static void InitializeScaleEffectUI(HWND hwnd);
+//===============================================================>>>
 
 static void InitializeGLSLFilterUI(HWND hWnd);
 static void InitializeBGFXBackendUI(HWND);
@@ -3636,7 +3644,11 @@ static void BuildDataMap(void)
 	// hlsl
 	datamap_add(properties_datamap, IDC_HLSL_ON,				DM_BOOL,	WINOPTION_HLSL_ENABLE);
 
-//==================== 缘来是你 ========================>>>
+//==================== USE_SCALE_EFFECTS ===============>>>
+	datamap_add(properties_datamap, IDC_SCALEEFFECT,			DM_STRING,	OPTION_SCALE_EFFECT);
+//======================================================>>>
+
+//==================== 缘来是你 =========================>>>
 	datamap_add(properties_datamap, IDC_IPS_LIST,               DM_STRING,  OPTION_IPS);
 	datamap_add(properties_datamap, IDC_SKIP_CRC_CHECK, 		DM_BOOL, 	OPTION_SKIP_CRC_CHECK);
 	datamap_add(properties_datamap, IDC_PGM2_MEMCARD_HACK, 		DM_BOOL, 	OPTION_PGM2_MEMCARD_HACK);
@@ -3744,6 +3756,10 @@ static void InitializeOptions(HWND hDlg)
 	InitializePluginsUI(hDlg);
 	InitializeGLSLFilterUI(hDlg);
 	InitializeBGFXBackendUI(hDlg);
+
+//======= USE_SCALE_EFFECTS =======>>>
+	InitializeScaleEffectUI(hDlg);
+//=================================>>>
 
 // 修改的 (醉猫)
 /******************************/
@@ -4400,6 +4416,34 @@ static void InitializeGLSLFilterUI(HWND hWnd)
 		}
 	}
 }
+
+//==================== USE_SCALE_EFFECTS ========================>>>
+const wchar_t *GetWC(const char *c)
+{
+    const size_t cSize = strlen(c)+1;
+    wchar_t* wc = new wchar_t[cSize];
+    mbstowcs (wc, c, cSize);
+
+    return wc;
+}
+/* Populate the scale effect drop down */
+ static void InitializeScaleEffectUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_SCALEEFFECT);
+
+	if (hCtrl)
+	{
+		for (int i = 0; i <NUMSCALEEFFECTS; i++)
+		{
+			const char *value = scale_name(i);
+//			(void)ComboBox_AddString(hCtrl,scale_desc(i));
+//			(void)ComboBox_InsertString(hCtrl, i, scale_desc(i));
+			(void)ComboBox_InsertString(hCtrl, i, GetWC(scale_desc(i)));
+			(void)ComboBox_SetItemData(hCtrl, i, value);
+		}
+	}
+}
+//===============================================================>>>
 
 static void InitializeBGFXBackendUI(HWND hWnd)
 {
