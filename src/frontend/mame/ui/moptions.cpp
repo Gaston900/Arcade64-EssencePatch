@@ -55,7 +55,7 @@ const options_entry ui_options::s_option_entries[] =
 	{ OPTION_INFOS_SIZE "(0.20-1.00)",      "0.75",             option_type::FLOAT,       "UI right panel infos text size (0.20 - 1.00)" },
 	{ OPTION_FONT_ROWS "(25-40)",           "30",               option_type::INTEGER,     "UI font lines per screen (25 - 40)" },
 	// MAMEFX colours changed, Mamesick 2016-08-31
-	{ OPTION_UI_BORDER_COLOR,               "ffb75b00",         option_type::STRING,      "UI border color (ARGB)" }, // 修改的 (加斯顿90)
+	{ OPTION_UI_BORDER_COLOR,               "ff008040",         option_type::STRING,      "UI border color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_BACKGROUND_COLOR,           "ef161616",         option_type::STRING,      "UI background color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_CLONE_COLOR,                "ffc6c6c6",         option_type::STRING,      "UI clone color (ARGB)" }, // 修改的 (加斯顿90)
 	{ OPTION_UI_DIPSW_COLOR,                "ff7f7f7f",         option_type::STRING,      "UI dipswitch color (ARGB)" },
