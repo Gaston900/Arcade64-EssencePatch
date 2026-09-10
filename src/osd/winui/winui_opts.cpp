@@ -67,7 +67,7 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_LIST_COLOR,					"255,255,255",    core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_HISTORY_COLOR,				"255,255,255",    core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_TREE_COLOR,					"255,255,255",    core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
-	{ MUIOPTION_TREEBG_COLOR,				"183,91,0", core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
+	{ MUIOPTION_TREEBG_COLOR,				"0,128,64", core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_LISTBG_COLOR,				"0,0,0", core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_HISTORYBG_COLOR,			"0,0,0", core_options::option_type::INTEGER, nullptr }, // 修改的 (加斯顿90)
 	{ MUIOPTION_CUSTOM_COLOR,				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", core_options::option_type::STRING, nullptr },
