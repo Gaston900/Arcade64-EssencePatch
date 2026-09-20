@@ -109,7 +109,7 @@ menu_main::menu_main(mame_ui_manager &mui, render_target &target)
 
 // 修改的 代码来源 (加斯顿90)
 //====================================================================================>>>
-	set_custom_space(ui().get_line_height(target) * 1.9f, 0.0f); //
+	set_custom_space(ui().get_line_height(target) * 1.9f, 0.0f);
 //====================================================================================>>>
 }
 
@@ -441,9 +441,9 @@ void menu_main::custom_render(uint32_t flags, void *selectedref, float top, floa
 
 	container().add_quad(x1_adjusted, top_box_lid, x2_adjusted, upper_box_floor, background_color, nullptr, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 
-	container().add_line(x1_adjusted, top_box_lid, x1_adjusted, upper_box_floor, line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA)); // Pared izquierda corregida
-	container().add_line(x2_adjusted, top_box_lid, x2_adjusted, upper_box_floor, line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA)); // Pared derecha corregida
-	container().add_line(x1_adjusted, top_box_lid, x2_adjusted, top_box_lid,     line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA)); // Techo horizontal corregido
+	container().add_line(x1_adjusted, top_box_lid, x1_adjusted, upper_box_floor, line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	container().add_line(x2_adjusted, top_box_lid, x2_adjusted, upper_box_floor, line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	container().add_line(x1_adjusted, top_box_lid, x2_adjusted, top_box_lid,     line_thickness, border_color, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 
 	float const line_height = ui().get_line_height(target()) * text_size_scale;
 	float const central_living = (top_box_lid + upper_box_floor) * 0.5f;
