@@ -1,0 +1,45 @@
+// license:BSD-3-Clause
+// copyright-holders:Nicola Salmoria, Aaron Giles, Nathan Woods
+/***************************************************************************
+
+    ui/mainmenu.h
+
+    Internal MAME menus for the user interface.
+
+***************************************************************************/
+
+#ifndef MAME_FRONTEND_UI_MAINMENU_H
+#define MAME_FRONTEND_UI_MAINMENU_H
+
+#pragma once
+
+#include "ui/menu.h"
+
+
+namespace ui {
+
+class menu_main : public menu
+{
+public:
+	menu_main(mame_ui_manager &mui, render_target &target);
+	virtual ~menu_main();
+
+protected:
+	virtual void menu_activated() override;
+
+private:
+	virtual void populate() override;
+	virtual bool handle(event const *ev) override;
+
+
+// 修改的 代码来源 (加斯顿90)
+//===========================================================================================================>>>
+	virtual void custom_render(uint32_t flags, void *selectedref, float top, float bottom, float x1, float y1, float x2, float y2) override;
+//===========================================================================================================>>>
+
+	machine_phase m_phase;
+};
+
+} // namespace ui
+
+#endif // MAME_FRONTEND_UI_MAINMENU_H
