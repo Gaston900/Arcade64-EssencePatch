@@ -966,7 +966,6 @@ void menu_custom_setting::populate()
 
         item_append(custom_name_buf, subtext, FLAG_LEFT_ARROW | FLAG_RIGHT_ARROW, (void *)(btn.field));
 //================================================================>>>
-
 	}
 
 	/* add autofire delay items */
@@ -1497,8 +1496,6 @@ menu_scale_effect::~menu_scale_effect()
 void menu_scale_effect::populate()
 {
 	int scaler;
-	
-	item_append(_("None"), "", 0, (void *)(uintptr_t)SCALE_ITEM_NONE);
 
 	for (scaler = 1; ; scaler++)
 	{
@@ -1506,9 +1503,9 @@ void menu_scale_effect::populate()
 		if (desc == nullptr)
 			break;
 
-		item_append(desc, "", 0, (void *)(uintptr_t)(SCALE_ITEM_NONE + scaler));
+		item_append(desc, "", 0, (void *)(uintptr_t)(scaler));
 	}
-	set_custom_space(0.0f, ui().get_line_height(target()) * 4.0f);
+	set_custom_space(0.0f, 0.0f);
 }
 
 void menu_scale_effect::custom_render(uint32_t flags, void *selectedref, float top, float bottom, float x1, float y1, float x2, float y2)
@@ -1537,18 +1534,18 @@ bool menu_scale_effect::handle(event const *ev)
 	{
 		uintptr_t selected_effect = uintptr_t(ev->itemref);
 		
-		if (selected_effect >= SCALE_ITEM_NONE)
+		if (selected_effect >= 1)
 		{
 			screen_device *screen = screen_device_enumerator(machine().root_device()).first();
 			if (screen != nullptr)
 			{
 				screen->video_exit_scale_effect();
-				scale_decode(scale_name(selected_effect - SCALE_ITEM_NONE));
+				scale_decode(scale_name(selected_effect));
 				screen->video_init_scale_effect();
 
-				machine().video().frame_update(false);
+				machine().video().frame_update(selected_effect == 1);
 				
-				osd_printf_verbose("scale effect: %s\n", scale_name(selected_effect - SCALE_ITEM_NONE));
+				osd_printf_verbose("scale effect: %s\n", scale_name(selected_effect));
 				
 				reset(reset_options::REMEMBER_REF);
 				return true;
@@ -1559,7 +1556,6 @@ bool menu_scale_effect::handle(event const *ev)
 	return false;
 }
 
-#undef SCALE_ITEM_NONE
 //=======================================================================>>>
 
 } // namespace ui

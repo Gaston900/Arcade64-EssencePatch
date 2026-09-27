@@ -25,8 +25,13 @@ private:
     virtual void populate() override;
     virtual bool handle(event const *ev) override;
 
-    void scan_patches();
+	void scan_patches();
     void update_ips_option();
+
+    enum
+    {
+        ITEM_RESET_SYSTEM = 9999
+    };
 
     std::vector<patch_info> m_patches;
     std::vector<bool> m_patch_enabled;
