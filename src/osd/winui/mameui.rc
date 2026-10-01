@@ -170,11 +170,10 @@ BEGIN
 // 修改的 代码来源 (缘来是你)
 /*********************************************************************************************/
 	    MENUITEM SEPARATOR
-        MENUITEM "Delete ROM file\tDel",                         ID_CONTEXT_DELETE_ROM
-	    MENUITEM "Batch delete mode\tCtrl+Alt+D",                   ID_CONTEXT_BATCH_DELETE_MODE
-	    MENUITEM "Delete the selected ROM file\tDel",                   ID_CONTEXT_DELETE_SELECTED_ROMS
-        MENUITEM SEPARATOR
-        MENUITEM "Select All\tCtrl+A",                     ID_CONTEXT_SELECT_ALL
+        MENUITEM "Delete ROM file\tDel",                  ID_CONTEXT_DELETE_ROM
+	    MENUITEM "Delete the selected ROM file\tDel",     ID_CONTEXT_DELETE_SELECTED_ROMS
+	    MENUITEM "Batch delete mode\tCtrl+Alt+D",         ID_CONTEXT_BATCH_DELETE_MODE    
+        MENUITEM "Select All\tCtrl+A",                    ID_CONTEXT_SELECT_ALL
         MENUITEM "Cancel all\tCtrl+Z",                    ID_CONTEXT_SELECT_NONE
         MENUITEM SEPARATOR
 /*********************************************************************************************/
@@ -190,6 +189,13 @@ BEGIN
 //        MENUITEM "Delete game settings",                  ID_RC_CLEAN
         MENUITEM "Listen to music with M1FX\tAlt+M",      ID_PLAY_M1
         MENUITEM SEPARATOR
+
+// 修改的 代码来源 (加斯顿90)
+//==================================================================================================>>>
+        MENUITEM "Cleaning of NVRAM and Cfg files",       ID_CONTEXT_CLEAN_SINGLE_NVRAM_CFG
+        MENUITEM "Complete cleanup of all NVRAM and Cfg files", ID_CONTEXT_CLEAN_ALL_NVRAM_CFG
+        MENUITEM SEPARATOR
+//==================================================================================================>>>
         MENUITEM "Properties\tAlt+G",                     ID_GAME_PROPERTIES
         MENUITEM "Properties for driver\tAlt+D",          ID_FOLDER_SOURCEPROPERTIES
         MENUITEM SEPARATOR
@@ -665,6 +671,7 @@ BEGIN
     GROUPBOX 	    "Image Enhancement",IDC_STATIC,4,240,124,29
     COMBOBOX        IDC_SCALEEFFECT,10,252,112,200,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,0
 //===============================================================>>>
+   
     GROUPBOX        "Screen shader 0",IDC_STATIC,280,40,102,48
     EDITTEXT        IDC_SCREEN_SHADER0,290,50,90,14,ES_LEFT | WS_BORDER
     PUSHBUTTON      "Select",IDC_SELECT_SCR_SHADER0,290,68,40,14,0,0
@@ -832,8 +839,8 @@ BEGIN
     PUSHBUTTON      "Select cheat file",IDC_SELECT_CHEATFILE,10,212,60,14,0,0
     PUSHBUTTON      "Reset cheat file",IDC_RESET_CHEATFILE,80,212,60,14,0,0
     
-    CONTROL         "Skip game informations screen at startup",IDC_SKIP_GAME_INFO,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,236,150,10,0
-    CONTROL         "Quit game confirmation screen on exit",IDC_CONFIRM_QUIT,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,248,150,10,0
+	CONTROL         "Enable developer tools",IDC_CONFIRM_QUIT,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,236,150,10,0
+    CONTROL         "Skip game informations screen at startup",IDC_SKIP_GAME_INFO,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,248,150,10,0
     CONTROL         "Display mouse cursor in internal interface",IDC_ENABLE_MOUSE_UI,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,260,150,10,0
     CONTROL         "Save NVRAM on exit",IDC_NVRAM_SAVE,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,272,104,10,0
     CONTROL         "Enable rewind savestates",IDC_REWIND,WC_BUTTON,BS_AUTOCHECKBOX | WS_TABSTOP,10,284,104,10,0
@@ -1172,12 +1179,19 @@ IDB_RENAME                BITMAP                    "res\\rename.bmp"
 IDB_RESET                BITMAP                    "res\\reset.bmp"
 // 修改的 代码来源 (EKMAME)
 /****************************************************************************/
-IDB_KLIST				 BITMAP					   "res\\klist.bmp"
+IDB_KLIST				 BITMAP					    "res\\klist.bmp"
 /****************************************************************************/
 // 修改的 (Eziochiu)
 /****************************************************************************/
-IDB_MAME_IPS            BITMAP                     "res\\mame.bmp"
+IDB_MAME_IPS             BITMAP                     "res\\mame.bmp"
 /****************************************************************************/
+
+// 修改的 代码来源 (加斯顿90)
+//===========================================================================>>>
+IDB_CLEANSINGLE          BITMAP                     "res\\cleansingle.bmp"
+IDB_CLEANALL             BITMAP                     "res\\cleanall.bmp"
+IDB_CONTEXT              BITMAP                     "res\\context.bmp"
+//===========================================================================>>>
 /////////////////////////////////////////////////////////////////////////////
 //
 // Cursor
