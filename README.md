@@ -3,75 +3,22 @@ What is Arcade64 Essence Patch?
 
 This is a version that was developed to include unofficial support for the [ARCADE64](https://arcade.mameworld.info/) emulator that has not yet been included or recognized to date, which does not allow the incorporation of corrections, new mechanisms and optimization for the system.
 
-I am only supporting the operating systems 64x bits, Windows 10 and Windows 11.
+All source code used to create the base system, extracted from the GitHub repository:
 
-What has been optimized in this version?
----------------------------------------
-This command will help us have much easier access to the settings:
+Robert [[HBMAME](https://github.com/Robbbert/hbmame)], Dirstac [[Arcade Extended](https://github.com/Dirstac/ArcadeUI-CHS)] and Kaze [[EKMAME](https://github.com/WOOSEOK99/EKMAME)]
 
-* To enter the BIOS, press the "0" key.
-* To play in windowed mode, press the "Spacebar" key.
-* To accelerate the game by 3x, press the "Backspace" key.
-
-Players 1 and 2 use this controller by default:
-
-* To move, use the arrow keys "Up, Down, Left, Right."
-* To perform actions, use the "A, S, D, Z, X, C, Q, W, E" keys.
-
-Added custom buttons and autofire (By MAMEPLUS)
-
-Removed warning screen, startups, Decryption screen texts.
-
-Removed the following annoying messages: “WRONG LENGTH”, “NO_DUMP”, “WRONG CHECKSUMS”, “BAD_DUMP”.
-
-Support reading IPS (By Eziochiu)
-
-Added movement optimization V.4 for all fighting games (By GSC2007)
-
-The Arcade64 "GUI" EKMAME source code has been implemented (By KAZE)
-
-It is already pre-configured, enforce aspect ratio is disabled, full screen mode and tricks are already enabled by default.
-
-The cheat reference function, if the cloned game does not have a cheat file, it will reference the cheat file of the main ROM (By KAZE).
-
-NEOGEO, PGM, driver supports key combination settings (By KAZE)
-
-Support for the option to lock the game's frame rate to 60 (By KAZE)
-
-Support automatic game icon adaptation (By KAZE)
-
-A bug that caused a crash due to an excessive number of entries in the multilingual games list has been fixed (By 缘来是你).
-
-Support for high-resolution screens 1920 x 1080 / 2560 x 1600 (By 缘来是你)
-
-Supports optimized search function (By 缘来是你)
-
-Supports XML export (By 缘来是你)
-
-Supports IPS optimization (By 缘来是你)
-
-Supports game list language files and multilingual title display (By 缘来是你)
-
-Supports Skip CRC/IPS Check (By 缘来是你)
-
-Support for a cheat code translation system has been added (By 缘来是你)
-
-Supports the quick ROM scan function (By 缘来是你)
-
-Supports searching for games by name, driver, and manufacturer (By 缘来是你)
-
-The IPS manager has been fixed (By Drunk Cat)
+It runs on Windows 10 build 1607, 64-bit or later.
 
 How to compile
 ---------------------------------------
-In order to compile this version we will need to download the [ARCADE64](https://github.com/Robbbert/abcdefg/tags) source codes. How do we know which version we need? We will have to locate the latest compilation that I have released publicly.
+In order to compile this version we will need the source code, for this we will place it in the folder "docs/Source Code[HBMame]/abcdefg-tag289.7z.001", once located we will begin to unzip the files it will take a few minutes, once unzipped we will have a folder with the name "abcdefg-tag289.7z", we will rename it to “src”. Now we will get the latest source code from this Github container once downloaded we will start to unzip and once finished unzipping we will select the files that we had left in the folder “3rdparty, scripts, src and makefile” folders, then copy them into the "src" folder. When the system asks to confirm file replacement, accept the operation.
+
+The version used is msys64 15.0.2; if you do not have it, you can find it in the folder “docs / Build Tools / msys64-15.0.2.7z.001”.
 
 And we will apply this command to start the compilation:
 ```
 make OSD=winui PTR64=1 SUBTARGET=arcade SYMBOLS=0 NO_SYMBOLS=1 DEPRECATED=0
 ```
-
-The compilation [TOOL](https://github.com/mamedev/buildtools/releases) is suggested to be 7.0 msys64 (Jan 11, 2022).
 
 Open Source Software Projects
 ------------------------------
