@@ -210,6 +210,15 @@
 #define IDB_CLEANSINGLE                 294
 #define IDB_CLEANALL                    295
 #define IDB_CONTEXT                     296
+#define IDB_BATCH_DELETE                297
+#define IDB_SELECT_ALL                  298
+#define IDB_SELECT_NONE                 329
+#define IDB_DELETE_ROM                  300
+#define IDB_EXP_ALL                     301
+#define IDB_EXP_COMPLETE                302
+#define IDB_EXP_MISSING                 303
+#define IDB_EXP_CURRENT                 304
+#define IDB_IPS_MENU                    305
 //=============================================>>>
 
 // 修改的 (Eziochiu)

@@ -653,7 +653,7 @@ namespace {
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN6,               N_p("input-name", "@P6 Coin 6"),             input_seq(JOYCODE_SELECT_INDEXED(5)) ) \
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN7,               N_p("input-name", "@P7 Coin 7"),             input_seq(JOYCODE_SELECT_INDEXED(6)) ) \
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN8,               N_p("input-name", "@P8 Coin 8"),             input_seq(JOYCODE_SELECT_INDEXED(7)) ) \
-		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN9,               N_p("input-name", "@@lever Coin 9"),         input_seq() ) \
+		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN9,               N_p("input-name", "@lever Coin 9"),          input_seq() ) \
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN10,              N_p("input-name", "@nplayer Coin 10"),       input_seq() ) \
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN11,              N_p("input-name", "Coin 11"),                input_seq() ) \
 		INPUT_PORT_DIGITAL_TYPE(  0, OTHER,    COIN12,              N_p("input-name", "Coin 12"),                input_seq() ) \
